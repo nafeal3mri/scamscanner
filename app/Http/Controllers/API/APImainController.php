@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class APImainController extends Controller
 {
-    public function getUrlData()
+    public function getUrlData(Request $data)
     {
         $pieces = parse_url("https://markez.nafe.me");
         $domain = isset($pieces['host']) ? $pieces['host'] : '';
