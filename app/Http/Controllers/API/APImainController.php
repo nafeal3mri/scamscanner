@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use DB;
 class APImainController extends Controller
 {
     public function getUrlData(Request $data)
@@ -14,6 +14,7 @@ class APImainController extends Controller
         ],[
             'domain.required' => __('Please enter a valid url')
         ]);
+    
         $dataset = ['posted_domain' => $data['domain']];
         $pieces = parse_url($data['domain']);
         $domain = isset($pieces['host']) ? $pieces['host'] : '';
@@ -21,7 +22,8 @@ class APImainController extends Controller
             $resp = true;
             $dataset = [
                 'posted_domain' => $data['domain'],
-                'domain' => $regs['domain']
+                'domain' => $regs['domain'],
+                'link_type' => '' //red (bad) - yellow (caution) - green (good) - not listed
             ];
         }else{
             $resp = false;
