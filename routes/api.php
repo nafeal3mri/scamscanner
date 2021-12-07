@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::prefix('v1')->group(function () {
-Route::post('scanUrl',[App\Http\Controllers\API\APImainController::class,'getUrlData']);
+    Route::post('scanUrl',[App\Http\Controllers\API\APImainController::class,'getUrlData']); //Scan Url
 });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
