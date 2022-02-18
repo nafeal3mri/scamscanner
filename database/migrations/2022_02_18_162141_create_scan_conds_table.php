@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDomainCategorsTable extends Migration
+class CreateScanCondsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateDomainCategorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('domain_categors', function (Blueprint $table) {
+        Schema::create('scan_conds', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description')->nullable();
+            
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateDomainCategorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('domain_categors');
+        Schema::dropIfExists('scan_conds');
     }
 }

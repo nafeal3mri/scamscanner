@@ -15,11 +15,14 @@ class CreateDomainListsTable extends Migration
     {
         Schema::create('domain_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('domain')->unique();
+            $table->string('domain_url');
+            $table->string('main_domain');
             $table->string('type'); //red (bad) - yellow (caution) - green (good)
             $table->integer('category');
-            $table->longText('description');
-            $table->enum('add_by',['submition','manual']); //submition - manual
+            $table->string('page_title')->nullable();
+            $table->string('page_icon')->nullable();
+            $table->longText('description')->nullable();
+            $table->enum('add_by',['submition','manual'])->default('manual'); //submition - manual
             $table->timestamps();
         });
     }
