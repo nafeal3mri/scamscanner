@@ -5,6 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\DomainCategor;
 use App\Models\DomainList;
+use App\Models\LinkAppRequest;
+use App\Models\ScanCond;
+use App\Models\StringLookup;
+use App\Models\UrlReview;
 use Illuminate\Http\Request;
 use Pdp\Rules;
 use Pdp\Domain;
@@ -12,96 +16,326 @@ use GuzzleHttp\Client;
 use OpenGraph;
 use shweshi\OpenGraph\OpenGraph as OpenGraphOpenGraph;
 use Iodev\Whois\Factory;
+use Illuminate\Support\Str;
 
 class APImainController extends Controller
 {
-    public function iniScannerSteps(Request $data,$step)
+    public function iniScannerSteps(Request $data)
+    {
+        $this->validate($data,[
+            'domain'  => ['required','url'],
+        ],[
+            'domain.required' => __('Please enter a valid url'),
+            'domain.url' => __('Please enter a valid url')
+        ]);
+        $urlcode = Str::random(20);
+        LinkAppRequest::insert([
+            'scan_url' => $data['domain'],
+            'scan_token' => $urlcode,
+            'scan_step' => 1
+        ]);
+        return response()->json(['success' => true, 'token' => $urlcode, 'step' => 1]);
+
+    }
+
+    public function startScannerSteps(Request $data)
+    {
+        $this->validate($data,[
+            'token'  => ['required'],
+        ],[
+            'token.required' => __('Please enter a valid token'),
+        ]);
+        $requestdata = LinkAppRequest::firstWhere('scan_token',$data['token']);
+        if(isset($requestdata)){
+            switch ($requestdata->scan_step) {
+                case 1:
+                    $proccess = $this->getUrlData($requestdata); //check database
+                    break;
+                case 2:
+                    $proccess = $this->checkLinkInfo($requestdata);//chack page content
+                    break;
+                case 3:
+                    $proccess = $this->scanURLWhoIs($data);//check who.is
+                    break;
+                default:
+                    break;
+            }
+        }else{
+            $proccess = [
+                'success' => false,
+                'message' => "no data available"
+            ];
+        }
+        return $proccess;
+    }
+    public function testappapi(Request $data)//delete later
     {
         $this->validate($data,[
             'domain'  => ['required','url'],
         ],[
             'domain.required' => __('Please enter a valid url')
         ]);
-        switch ($step) {
-            case 1:
-                $proccess = $this->getUrlData($data); //check database
-                break;
-            case 2:
-                $proccess = $this->checkLinkInfo($data);//check link meta
-                break;
-            case 3:
-                $proccess = $this->scanURLWhoIs($data);//check page content
-                break;
-            case 4:
-                $proccess = $this->scanURLWhoIs($data);//check who.is
-                break;
-            default:
-                break;
+        $urlcode = Str::random(20);
+        sleep(5);
+        LinkAppRequest::insert([
+            'scan_url' => $data['domain'],
+            'scan_token' => $urlcode,
+            'scan_step' => 1
+        ]);
+        return response()->json(['success' => true, 'token' => $urlcode, 'step' => 1]);
+    }
+    public function testappapisteps(Request $data) //delete latr
+    {
+        $this->validate($data,[
+            'token'  => ['required','string'],
+        ],[
+            'token.required' => __('Please enter token')
+        ]);
+        // sleep(5);
+        $requestdata = LinkAppRequest::firstWhere('scan_token',$data['token']);
+        if($data['domain'] == 'https://nafe.me'){
+            $domaincolor = "green";
+            $hasnxt = false;
+            $desc = "This website is good";
+            $cat = "good";
+            $resp_msg = "I'm a good website, don't worry about me";
+            $pagetitle = "Nafe website";
+            
+            $bodycheck = [
+                // 'title_check' => true,
+                // 'has_form' => true,
+                // 'blacklist_text' => true,
+                // 'blacklist_inputs' => false
+            ];
+            $step2msg = "";
+            $hasnxt3 = false;
+        }elseif($data['domain'] == 'https://fake.me'){
+            $domaincolor = "red";
+            $hasnxt = false;
+            $desc = "this link is bad";
+            $cat = "bad";
+            $resp_msg = "i'm a fake website, don't click on me at all";
+            $pagetitle = "Fake Website title";
+            $bodycheck = [
+                // 'title_check' => true,
+                // 'has_form' => true,
+                // 'blacklist_text' => true,
+                // 'blacklist_inputs' => false
+            ];
+            $step2msg = "";
+            $hasnxt3 = false;
+        }elseif($data['domain'] == 'https://form.me'){
+            $domaincolor = "yellow";
+            $hasnxt = true;
+            $desc = "be aware while browsing";
+            $cat = "form";
+            $resp_msg = "i'm a form, i may ask for forbidden data, don't answer it if you find it";
+            $pagetitle = "Google forms title";
+            $bodycheck = [
+                'title_check' => true,
+                'has_form' => true,
+                'blacklist_text' => false,
+                'blacklist_inputs' => false
+            ];
+            $step2msg = "this form doesn't contain any bad inputs";
+            $hasnxt3 = false;
+        }elseif($data['domain'] == 'https://red.me'){
+            $domaincolor = "red";
+            $hasnxt = true;
+            $desc = "it's bad, and here's more data";
+            $cat = "careful";
+            $resp_msg = "i'm a bad website and you have to be careful while browsing";
+            $pagetitle = "";
+            $bodycheck = [
+                'title_check' => true,
+                'has_form' => false,
+                'blacklist_text' => true,
+                'blacklist_inputs' => true
+            ];
+            $step2msg = "don't trust me ";
+            $hasnxt3 = false;
+        }else{
+            $domaincolor = "not listed";
+            $hasnxt = true;
+            $desc = "";
+            $cat = "";
+            $resp_msg = "no data now, move to next";
+            $pagetitle = "Fake DHL website";
+            $bodycheck = [
+                'title_check' => true,
+                'has_form' => false,
+                'blacklist_text' => true,
+                'blacklist_inputs' => false
+            ];
+            $step2msg = "don't trust me ";
+            $hasnxt3 = true;
+            $whoisdata = [
+                'creation_date' => '01/03/2022'
+            ];
+            $hasnext4 = true;
+            $finalmsg = 'don\'t trust this link at all';
+        }
+        $proccess = [];
+        if(isset($requestdata)){
+            switch ($requestdata->scan_step) {
+                case 1:
+                    $proccess = [
+                        'posted_link' => $data['domain'],
+                        'redirected_url' => $data['domain'],
+                        'domain' => $data['domain'],
+                        'link_color' => $domaincolor, 
+                        'link_category' => $cat,
+                        'link_desc' => $desc,
+                        'message' => $resp_msg,
+                        'next_step' => $hasnxt,
+                    ]; //check database
+                    $requestdata->scan_step = 2;
+                    $requestdata->save();
+                    break;
+                case 2:
+                    $proccess = [
+                        'redirected_url' => $data['domain'],
+                        'domain' => $data['domain'],
+                        'title' => $pagetitle,
+                        'next_step_3' => $hasnxt3
+                    ];//check link meta
+                    $requestdata->scan_step = 3;
+                    $requestdata->save();
+                    break;
+                case 3:
+                    $proccess = [
+                        'body_check' => $bodycheck,
+                        'next_step_3' => $hasnext4
+                    ];//check page content
+                    $requestdata->scan_step = 4;
+                    $requestdata->save();
+                    break;
+                case 4:
+                    $proccess = [
+                        'whois_creation_date' => $bodycheck,
+                        'resp_message' => $finalmsg
+                    ];//check page content
+                    break;
+                
+                default:
+                    break;
+            }
         }
 
         return $proccess;
     }
-    public function getUrlData(Request $data)
+    public function testnotifapp()//delete later
     {
-                
-        $finalurl = $this->finalredirecturl($data['domain']);
-        $domainres = $this->cleardomainname($finalurl);
-            $domain_color = 'Not Listed';
-            $resp = true;
-            $dataset = [
-                'posted_link' => $data['domain'],
-                'redirected_url' => $finalurl,
-                'domain' => $domainres,
-                'link_color' => $domain_color, 
-            ];
-            $check_url = DomainList::with('categ')->where(['main_domain' => $domainres['domain']])->get();
-            if($check_url->count() > 0){
-                $url_results = $check_url->first();
-                $domain_color = $url_results->type;
+        return [ 
+            [
+                'notify_color' => '3d847e',
+                'notify_title' => 'Welcome :)',
+                'notify_msg' => 'Welcome to a new experiance with us',
+                'has_link' => false,
+                'link_string' => ''
+            ],
+            [
+                'notify_color' => 'ff3377',
+                'notify_title' => 'BE CAREFUL!!',
+                'notify_msg' => 'Be careful from any kind of scams on the internet',
+                'has_link' => true,
+                'link_string' => 'https://scamscanner.test'
+            ]
+        ];
+    }
+    public function getUrlData($requestdata)
+    {
+        if(isset($requestdata)){
+            $finalurl = $this->finalredirecturl($requestdata->scan_url,true,$requestdata->scan_token);
+            $domainres = $this->cleardomainname($finalurl);
+            // DomainList::where('domain_url',$requestdata->scan_url)->orWhere('',$domainres['domain'])
+                // $domain_color = 'Not Listed';
+                $resp = true;
                 $dataset = [
-                    'link_color' => $domain_color, //red (bad) - yellow (caution) - green (good) - not listed - gray (js redirect)
-                    'link_category' => $url_results->categ->name,
-                    'link_desc' => $url_results->description,
+                    'posted_link' => $requestdata->scan_url,
+                    'redirected_url' => $finalurl,
+                    'domain' => $domainres,
                 ];
-            }
-            $dataset = [
-                'message' => '',
-                'next_step' => '',
-            ];
+                $check_url = DomainList::with('categ')
+                    ->where('main_domain', $domainres['domain'])
+                    // ->orWhere('main_domain',$domainres['host'])
+                    ->get();
+                if($check_url->count() > 0){
+                    $url_results = $check_url->first();
+                    $domain_color = $url_results->type;
+                    $dataset += [
+                        'link_color' => $domain_color, //red (bad) - yellow (caution) - green (good) - not listed - gray (js redirect)
+                        'link_category' => $url_results->categ->name,
+                        'link_desc' => $url_results->description,
+                        'has_next' => $domain_color == 'green' || $domain_color == 'red' ? false : true,
+                    ];
+                }else{
+                    $dataset['has_next'] = true;
+                    $requestdata->scan_step = 2;
+                    $requestdata->save();
+                }
+        }
             
         return response()->json(['success' => $resp, 'data' => $dataset]);
     }
 
-    public function checkLinkInfo(Request $data)
+    public function checkLinkInfo($requestdata)
     {
-        $finalurl = $this->finalredirecturl($data['domain']);
+        $finalurl = $this->finalredirecturl($requestdata->scan_url);
         $domainres = $this->cleardomainname($finalurl);
-        //check if link is google doc or form
-        if($domainres[''])
-        //check if link has title different from url in the database
-        //check link content if it has one of the forbidden words
-        
-        return $domainres;
-    }
-    
+        $checkform = $this->checkforform($requestdata);
+        if(count($checkform['found_in_form']) > 0){
+            $resp_msg = 'we found some warnings, please be careful';
+        }else{
+            $resp_msg = 'Please be careful while browsing this website';
+        }
 
-    public function getlinkMetadata(Request $data)
+        return response()->json(['success' => true, 'message' => $resp_msg]);
+    }
+
+    public function checkforform($requestdata)
     {
-        $this->validate($data,[
-            'domain'  => ['required'],
-        ],[
-            'domain.required' => __('Please enter a valid url')
-        ]);
-        try {
-            $dataset = [
-                'main_request_meta' => OpenGraph::fetch($data['domain'],true)
-            ];
-            return response()->json(['success' => true, 'data' => $dataset]);
-        } catch (shweshi\OpenGraph\Exceptions\FetchException $th) {
-            return response()->json(['success' => false, 'data' => $th]);
+        $titels = DomainList::where('type','green')
+        ->whereNotIn('page_title',[
+            '',
+            '403 Forbidden',
+            'الرئيسية',
+            'Not Available',
+            'Error Page',
+            'Request Rejected',
+            'Home',
+        ])
+        ->pluck('page_title')->toArray();
+        $checkstrings = StringLookup::pluck('lookup_text')->toArray();
+        $newlist = array_merge($titels,$checkstrings);
+
+        if($requestdata->page_html != ''){
+            $textfound = [];
+            $in_formtext = [];
+            foreach ($newlist as $strlist) {
+                if(str_contains($requestdata->page_html,$strlist)){
+                    $textfound[] = $strlist;
+                }
+                 if (preg_match('#<\s*?form\b[^>]*>(.*?)</form\b[^>]*>#s', $requestdata->page_html, $match) == 1) {
+                    if(str_contains($match[1],$strlist)){
+                        $in_formtext[] = $strlist;
+                    }
+                }
+            }
+            UrlReview::insertOrIgnore([
+                'url' => $requestdata->redirected_url,
+                'danger_rate' => count($in_formtext),
+                'url_request_code' => $requestdata->scan_token,
+                'created_at' => now()
+            ]);
+            return ['text_found' => $textfound, 'found_in_form' => $in_formtext];
+
+        }else{
+            return 'notext';
         }
         
     }
+
 
     public function cleardomainname($url)
     {
@@ -129,7 +363,7 @@ class APImainController extends Controller
         }
     }
    
-    public function finalredirecturl($url)
+    public function finalredirecturl($url,$is_app_req = false,$token = '')
     {
             $ch = curl_init();
 
@@ -140,18 +374,27 @@ class APImainController extends Controller
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 12); 
             curl_setopt($ch, CURLOPT_TIMEOUT, 9); //timeout in seconds
             curl_setopt($ch, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
-            curl_setopt($ch, CURLOPT_HEADER  , true);
-            curl_setopt($ch, CURLOPT_NOBODY  , true); 
+            // curl_setopt($ch, CURLOPT_HEADER  , true);
+            // curl_setopt($ch, CURLOPT_NOBODY  , true); 
             // sleep(4);
             $html = curl_exec($ch);
+            $redirectedUrl = '';
             if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == 0){
                 return false;
             }else{
                 $redirectedUrl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
                 curl_close($ch);
                 
-                return $redirectedUrl; 
             }
+            if($is_app_req && $token != ''){
+                $linkappreq = LinkAppRequest::firstWhere('scan_token',$token);
+                $linkappreq->page_html = $html;
+                $linkappreq->redirected_url = $redirectedUrl;
+                $linkappreq->save();
+            }
+
+            return $redirectedUrl; 
+
 
     }
 
@@ -181,118 +424,4 @@ class APImainController extends Controller
         return $code;
     
     }
-    public function metadatainroute($type,$local = 0) // please remove it later
-    {
-        try {
-            if($local == 0){
-                $links = $this->getlinksfromurl($type);
-            }else{
-                $links = [
-
-                    'https://splonline.com.sa/ar/',
-                    'https://zajil-express.com/',
-                    'https://www.aramex.com/ma/ar',
-                    'https://www.smsaexpress.com/sa/',
-                    'https://salasa.co/ar/',
-                    'https://new.naqelksa.com/ar/',
-                    'http://www.fetchr.us',
-                    'https://www.dhl.com/sa-en',
-                    
-                    
-                ];
-            }
-            $loop = 0;
-            foreach ($links as $link){
-                if($loop <4){
-                    $mainlink = $link;
-                    echo $mainlink;
-                    if( $mainlink == 'https://w10w.net/dlsm/'){
-                        echo " Xx";
-                    }else{
-                    $linkurl = $this->finalredirecturl($mainlink);
-                    // if(in_array($linkurl,['https://w10w.net/dlsm/','http://www.alsharq.net.sa/','file:///C:/WWW/dlsm/www.anaween.com','http://www.mapnews.com/','http://www.alhayat.com/','http://www.an7a.com/','https://www.alawwalbank.com/'])){
-                    if($linkurl == false){
-                        echo " X";
-                    }else{
-                        
-                        $linktitle = $this->getprevdata($linkurl);
-                        
-                        $sitetitle = str_contains($linktitle,'Ù') ? utf8_decode($linktitle) : $linktitle;
-                        
-                        if(DomainList::where(['domain_url' => $linkurl])->count() == 0 && !filter_var($linkurl, FILTER_VALIDATE_URL) === false){
-                            $linkresult = OpenGraph::fetch($linkurl,true);
-                            $categ = DomainCategor::where('name',$type)->get();
-                            if($categ->count() > 0){
-                                DomainList::insert([
-                                    'domain_url' => $linkurl,
-                                    'main_domain' => $this->cleardomainname($linkurl)['domain'],
-                                    'page_title' => $sitetitle != '' ? $sitetitle : (isset($linkresult['title']) ? $linkresult['title'] : (isset($linkresult['description']) ? $linkresult['description'] : '')),
-                                    'page_icon' => isset($linkresult['image']) ? $linkresult['image'] : '',
-                                    'description' => isset($linkresult['description']) ? $linkresult['description'] : '', 
-                                    'type' => 'green',
-                                    'category' => $categ->first()->id,
-                                    'created_at' =>  now(),
-                                ]);
-                                echo "✓";
-                                $loop++;
-                            }
-                        }
-                    }
-                    echo "<br>";
-                }
-                }
-            }
-            // return $linkdata;
-        } catch (shweshi\OpenGraph\Exceptions\FetchException $th) {
-            return response()->json(['success' => false, 'data' => $th]);
-        }
-        
-    }
-
-    public function getlinksfromurl($type) //please remove it later
-    {
-        
-        // $html = file_get_contents('https://www.w10w.net/links_saudi/'.$type.'.php');
-        $html = file_get_contents('https://www.w10w.net/links_saudi/tamen.php');
-        $dom = new \DOMDocument;
-        @$dom->loadHTML($html);
-        $links = $dom->getElementsByTagName('a');
-        $mlinks = [];
-        foreach ($links as $link) {
-            $mlinks[] = $link->getAttribute('href');
-        }
-        return $mlinks;
-    }
-
-    public function getprevdata($url) //please remove it later
-    {
-        $html = $this->file_get_contents_curl($url);
-        $title = "";
-        $description ="";
-        $image = "";
-     
-        //parsing begins here:
-        $doc = new \DOMDocument();
-        @$doc->loadHTML($html);
-        $nodes = $doc->getElementsByTagName('title');
-        $title = isset($nodes->item(0)->nodeValue) ? $nodes->item(0)->nodeValue : '';
-        return $title;
-    }
-
-    public function file_get_contents_curl($url) //please remove it later
-    {
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/600.7.12 (KHTML, like Gecko) Version/8.0.7 Safari/600.7.12','Content-type: text/html; charset=UTF-8'));
-        $data = curl_exec($ch);
-        curl_close($ch);
-        return $data;
-    }
-
-
-
 }

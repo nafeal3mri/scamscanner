@@ -14,44 +14,44 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        $links = [
-            'http://www.spa.gov.sa/',
-            'http://www.okaz.com.sa/',
-            'https://sabq.org/',
-            'http://www.alriyadh.com/',
-            'http://www.alweeam.com.sa/',
-            'http://www.alsharq.net.sa/',
-            'https://www.almowaten.net/',
-            'http://www.alwatan.com.sa',
-            'http://www.ajel.sa/',
-            'http://www.alyaum.com/',
-            'https://al-marsd.com/',
-            'http://www.al-jazirah.com/',
-            'http://akhbaar24.argaam.com/',
-            'https://aawsat.com/',
-            'http://www.aleqt.com/',
-            'http://www.mapnews.com/',
-            'http://www.alhayat.com/',
-            'http://www.an7a.com/',
-            'http://www.al-madina.com/',
-            'http://www.fajr.sa/',
-            'http://www.alarabiya.net/',
-            'https://www.skynewsarabia.com/',
-            'http://www.bbc.com/arabic',
-            'https://arabic.cnn.com/',
-            'http://www.maaal.com/',
-            'http://www.rasdnews.net/'
-        ];
-        foreach ($links as $value) {
+        // $links = [
+        //     'http://www.spa.gov.sa/',
+        //     'http://www.okaz.com.sa/',
+        //     'https://sabq.org/',
+        //     'http://www.alriyadh.com/',
+        //     'http://www.alweeam.com.sa/',
+        //     'http://www.alsharq.net.sa/',
+        //     'https://www.almowaten.net/',
+        //     'http://www.alwatan.com.sa',
+        //     'http://www.ajel.sa/',
+        //     'http://www.alyaum.com/',
+        //     'https://al-marsd.com/',
+        //     'http://www.al-jazirah.com/',
+        //     'http://akhbaar24.argaam.com/',
+        //     'https://aawsat.com/',
+        //     'http://www.aleqt.com/',
+        //     'http://www.mapnews.com/',
+        //     'http://www.alhayat.com/',
+        //     'http://www.an7a.com/',
+        //     'http://www.al-madina.com/',
+        //     'http://www.fajr.sa/',
+        //     'http://www.alarabiya.net/',
+        //     'https://www.skynewsarabia.com/',
+        //     'http://www.bbc.com/arabic',
+        //     'https://arabic.cnn.com/',
+        //     'http://www.maaal.com/',
+        //     'http://www.rasdnews.net/'
+        // ];
+        // foreach ($links as $value) {
 
-           return [
-                'domain_url' => $value,
-                'page_title' => '',
-                'page_icon' => '',
-                'description' => '', 
-                'created_at' =>  now(),
-            ];
-        }
+        //    return [
+        //         'domain_url' => $value,
+        //         'page_title' => '',
+        //         'page_icon' => '',
+        //         'description' => '', 
+        //         'created_at' =>  now(),
+        //     ];
+        // }
         // return [
         //     'name' => $this->faker->name(),
         //     'email' => $this->faker->unique()->safeEmail(),

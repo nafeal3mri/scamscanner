@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\DomainList;
+use App\Models\LinkAppRequest;
+use App\Models\StringLookup;
 use Illuminate\Support\Facades\Route;
 use \OpenGraph as Ogdataset;
 use Iodev\Whois\Factory;
@@ -19,11 +21,19 @@ use Iodev\Whois\Factory;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/2', function () {
+    return LinkAppRequest::firstWhere('scan_token','T7q76XcRLCeu0FJOjquX');
+});
 
 Route::get('scanUrl/{type}/{local?}',[App\Http\Controllers\API\APImainController::class,'metadatainroute']); //Scan Url
 Route::get('list',function(){
-    $whois = Factory::get()->createWhois();
-    print_r($whois->loadDomainInfo('cam-lens.com')->creationDate);
+   $stringtxt = ['رقم الهوية','رقم الهويه','رقم الحساب البنكي','رقم الحساب','رقم الايبان','رقم البطاقة','رمز التحقق'];
+//    foreach ($stringtxt as $key => $value) {
+//        StringLookup::insert([
+//         'lookup_text' => $value,
+//         'lookup_type' => 'form'
+//        ]);
+//    }
 });
 Route::get('testurl',function(){
     $url = "http://www.sama.gov.sa/ar-sa";
