@@ -7,6 +7,7 @@ use App\Models\DomainCategor;
 use App\Models\DomainList;
 use App\Models\LinkAppRequest;
 use App\Models\ScanCond;
+use App\Models\ScanResponseMessages;
 use App\Models\StringLookup;
 use App\Models\UrlReview;
 use Illuminate\Http\Request;
@@ -247,9 +248,7 @@ class APImainController extends Controller
     {
         if(isset($requestdata)){
             $finalurl = $this->finalredirecturl($requestdata->scan_url,true,$requestdata->scan_token);
-            $domainres = $this->cleardomainname($finalurl);
-            // DomainList::where('domain_url',$requestdata->scan_url)->orWhere('',$domainres['domain'])
-                // $domain_color = 'Not Listed';
+            $domainres = $this->cleardomainname($requestdata->scan_url);
                 $resp = true;
                 $dataset = [
                     'posted_link' => $requestdata->scan_url,
@@ -258,16 +257,18 @@ class APImainController extends Controller
                 ];
                 $check_url = DomainList::with('categ')
                     ->where('main_domain', $domainres['domain'])
-                    // ->orWhere('main_domain',$domainres['host'])
                     ->get();
                 if($check_url->count() > 0){
                     $url_results = $check_url->first();
+                    $resp_msgs = ScanResponseMessages::where('called_from', $domainres['publicSuffix'])
+                    ->orWhere('called_from',$url_results->categ->name);
                     $domain_color = $url_results->type;
                     $dataset += [
                         'link_color' => $domain_color, //red (bad) - yellow (caution) - green (good) - not listed - gray (js redirect)
                         'link_category' => $url_results->categ->name,
                         'link_desc' => $url_results->description,
                         'has_next' => $domain_color == 'green' || $domain_color == 'red' ? false : true,
+                        'message' => $resp_msgs->first()->message
                     ];
                 }else{
                     $dataset['has_next'] = true;
@@ -331,7 +332,7 @@ class APImainController extends Controller
             return ['text_found' => $textfound, 'found_in_form' => $in_formtext];
 
         }else{
-            return 'notext';
+            return ['text_found' => [], 'found_in_form' => []];
         }
         
     }
@@ -339,28 +340,23 @@ class APImainController extends Controller
 
     public function cleardomainname($url)
     {
-
-        // return $result;
         $pieces = parse_url($url);
-        $domain = isset($pieces['host']) ? $pieces['host'] : '';
-        if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
             $publicSuffixList = Rules::createFromPath(storage_path('app/domaincache/public_suffix_list.dat'));
-            $domains = new Domain($regs['domain']);
+            $domains = new Domain($pieces['host']);
             $result = $publicSuffixList->resolve($domains);
-
+            $hassubdomain = '';
+            if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $pieces['host'], $regs)) {
+                $hassubdomain = $regs['domain'];
+            }
             $nic_suffix = ['sa','com.sa','net.sa','org.sa','gov.sa','med.sa','pub.sa','edu.sa','sch.sa'];
             return [
                 'host' => isset($pieces['host']) ? $pieces['host'] : '',
                 'domain' => $result->getDomain(),
+                'main_domain' => $hassubdomain,
                 'url_path' => parse_url($url,PHP_URL_PATH),
                 'publicSuffix' => $result->getPublicSuffix(),
                 'is_nic' => in_array($result->getPublicSuffix(),$nic_suffix,true) ? true : false
             ];
-        }else{
-            return [
-                'domain' => isset(parse_url($url)['host']) ? parse_url($url)['host'] : 'Not Hosted'
-            ];
-        }
     }
    
     public function finalredirecturl($url,$is_app_req = false,$token = '')
