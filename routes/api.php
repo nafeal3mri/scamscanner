@@ -25,7 +25,7 @@ Route::prefix('v1')->group(function () {
 
     // Route::post('testres',[App\Http\Controllers\API\APImainController::class,'testappapi']); //Scan Url
     // Route::post('testres2',[App\Http\Controllers\API\APImainController::class,'testappapisteps']); //Scan Url
-    // Route::get('testnotif',[App\Http\Controllers\API\APImainController::class,'testnotifapp']); //Scan Url
+    Route::get('testnotif',[App\Http\Controllers\API\APImainController::class,'testnotifapp']); //Scan Url
 });
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();

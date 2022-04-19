@@ -9,6 +9,7 @@ use App\Models\LinkAppRequest;
 use App\Models\ScanCond;
 use App\Models\ScanResponseMessages;
 use App\Models\StringLookup;
+use App\Models\SusHosts;
 use App\Models\UrlReview;
 use Illuminate\Http\Request;
 use Pdp\Rules;
@@ -23,6 +24,7 @@ class APImainController extends Controller
 {
     public function iniScannerSteps(Request $data)
     {
+        sleep(5);
         $this->validate($data,[
             'domain'  => ['required','url'],
         ],[
@@ -35,12 +37,13 @@ class APImainController extends Controller
             'scan_token' => $urlcode,
             'scan_step' => 1
         ]);
-        return response()->json(['success' => true, 'token' => $urlcode, 'step' => 1]);
+        return response()->json(['success' => true, 'token' => $urlcode, 'data'=>['step' => 1,'has_next' => true]]);
 
     }
 
     public function startScannerSteps(Request $data)
     {
+        sleep(5);
         $this->validate($data,[
             'token'  => ['required'],
         ],[
@@ -228,20 +231,20 @@ class APImainController extends Controller
     public function testnotifapp()//delete later
     {
         return [ 
-            [
-                'notify_color' => '3d847e',
-                'notify_title' => 'Welcome :)',
-                'notify_msg' => 'Welcome to a new experiance with us',
-                'has_link' => false,
-                'link_string' => ''
-            ],
-            [
-                'notify_color' => 'ff3377',
-                'notify_title' => 'BE CAREFUL!!',
-                'notify_msg' => 'Be careful from any kind of scams on the internet',
-                'has_link' => true,
-                'link_string' => 'https://scamscanner.test'
-            ]
+            // [
+            //     'notify_color' => '3d847e',
+            //     'notify_title' => 'Welcome :)',
+            //     'notify_msg' => 'Welcome to a new experiance with us',
+            //     'has_link' => false,
+            //     'link_string' => ''
+            // ],
+            // [
+            //     'notify_color' => 'ff3377',
+            //     'notify_title' => 'BE CAREFUL!!',
+            //     'notify_msg' => 'Be careful from any kind of scams on the internet',
+            //     'has_link' => true,
+            //     'link_string' => 'https://scamscanner.test'
+            // ]
         ];
     }
     public function getUrlData($requestdata)
@@ -256,7 +259,7 @@ class APImainController extends Controller
                     'domain' => $domainres,
                 ];
                 $check_url = DomainList::with('categ')
-                    ->where('main_domain', $domainres['domain'])
+                    ->where('main_domain', $domainres['main_domain'])
                     ->get();
                 if($check_url->count() > 0){
                     $url_results = $check_url->first();
@@ -264,17 +267,27 @@ class APImainController extends Controller
                     ->orWhere('called_from',$url_results->categ->name);
                     $domain_color = $url_results->type;
                     $dataset += [
-                        'link_color' => $domain_color, //red (bad) - yellow (caution) - green (good) - not listed - gray (js redirect)
-                        'link_category' => $url_results->categ->name,
-                        'link_desc' => $url_results->description,
+                        // 'link_color' => $domain_color, //red (bad) - yellow (caution) - green (good) - not listed - gray (js redirect)
+                        // 'link_category' => $url_results->categ->name,
+                        // 'link_desc' => $url_results->description,
                         'has_next' => $domain_color == 'green' || $domain_color == 'red' ? false : true,
-                        'message' => $resp_msgs->first()->message
+                        'icon' => $domain_color == 'green' ? 'success.json' : $domain_color == 'red' ? 'red-warning.json' : '',
+                        'message' => isset($resp_msgs->first()->message) ? $resp_msgs->first()->message : ''
                     ];
-                }else{
+                }elseif($domainres['is_nic']){
+                    $dataset += [
+                        'has_next' =>false,
+                        'icon' => 'success.json',
+                        'message' => 'يمكنك الوثوق بهذا الموقع'
+                    ];
+                
+                }else {
                     $dataset['has_next'] = true;
                     $requestdata->scan_step = 2;
                     $requestdata->save();
                 }
+                $dataset['step'] = 2;
+
         }
             
         return response()->json(['success' => $resp, 'data' => $dataset]);
@@ -285,13 +298,33 @@ class APImainController extends Controller
         $finalurl = $this->finalredirecturl($requestdata->scan_url);
         $domainres = $this->cleardomainname($finalurl);
         $checkform = $this->checkforform($requestdata);
+        $domainmessage = '';
+        if(isset(parse_url($finalurl)['host'])){
+            $maindomain = parse_url($finalurl)['host'];
+            if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $maindomain, $regs)) {
+                $sushost = SusHosts::where('host_name',$regs['domain'])->get();
+                if($sushost->count() > 0){
+                    $domainmessage = 'قد يكون هذا الموقع وهمي، تم ارسال معلومات الرابط لتحليله، لا تقم بمشاركة بياناتك اطلاقا';
+                }
+            }
+        }
         if(count($checkform['found_in_form']) > 0){
-            $resp_msg = 'we found some warnings, please be careful';
+            $resp_msg = $domainmessage != '' ? $domainmessage : "نحذر من مشاركة بياناتك الشخصية على هذا الرابط";
+            $warning_type = 'red';
+            $icon_type = 'red-warning.json';
         }else{
-            $resp_msg = 'Please be careful while browsing this website';
+            $resp_msg = $domainmessage != '' ? $domainmessage : 'كن حذرا اثناء عند تصفحك لهذا الموقع';
+            $warning_type = 'yellow';
+            $icon_type = 'np-progress-loader.json';
         }
 
-        return response()->json(['success' => true, 'message' => $resp_msg]);
+        return response()->json(['success' => true, 'data' => 
+            [
+                'step' => 3,
+                'has_next' => false,
+                'icon' => $icon_type,
+                'message' => $resp_msg, 
+                'warning_type' => $warning_type]]);
     }
 
     public function checkforform($requestdata)
