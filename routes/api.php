@@ -19,6 +19,7 @@ Route::prefix('v1')->group(function () {
     Route::post('scanUrl',[App\Http\Controllers\API\APImainController::class,'getUrlData']); //Scan Url
     Route::post('initscan',[App\Http\Controllers\API\APImainController::class,'iniScannerSteps']); //Scan Url
     Route::post('startscan',[App\Http\Controllers\API\APImainController::class,'startScannerSteps']); //Scan Url
+    Route::post('reportURL',[App\Http\Controllers\API\APImainController::class,'ReportErrorScan']); //Scan Url
     // Route::post('urlmeta',[App\Http\Controllers\API\APImainController::class,'getlinkMetadata']); //Scan Url
     // Route::post('isredirect',[App\Http\Controllers\API\APImainController::class,'isredirect']); //Scan Url
 

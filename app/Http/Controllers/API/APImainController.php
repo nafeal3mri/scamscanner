@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DomainCategor;
 use App\Models\DomainList;
 use App\Models\LinkAppRequest;
+use App\Models\ReportMistakes;
 use App\Models\ScanCond;
 use App\Models\ScanResponseMessages;
 use App\Models\StringLookup;
@@ -37,7 +38,9 @@ class APImainController extends Controller
             'scan_token' => $urlcode,
             'scan_step' => 1
         ]);
-        return response()->json(['success' => true, 'token' => $urlcode, 'data'=>['step' => 1,'has_next' => true]]);
+        return response()->json(['success' => true, 'token' => $urlcode, 
+        'data'=>['step' => 1,'has_next' => true]
+    ]);
 
     }
 
@@ -185,7 +188,7 @@ class APImainController extends Controller
                 case 1:
                     $proccess = [
                         'posted_link' => $data['domain'],
-                        'redirected_url' => $data['domain'],
+                        'redirected_url' => $data['domain'], //note.. could return bool in some cases.. must return string only
                         'domain' => $data['domain'],
                         'link_color' => $domaincolor, 
                         'link_category' => $cat,
@@ -266,19 +269,27 @@ class APImainController extends Controller
                     $resp_msgs = ScanResponseMessages::where('called_from', $domainres['publicSuffix'])
                     ->orWhere('called_from',$url_results->categ->name);
                     $domain_color = $url_results->type;
+                    $iconcolor = 'not-found.json';
+                    if($domain_color == 'green'){
+                        $iconcolor = 'success.json' ;
+                    }elseif( $domain_color == 'red' ){
+                        $iconcolor = 'red-warning.json';
+                    }
                     $dataset += [
                         // 'link_color' => $domain_color, //red (bad) - yellow (caution) - green (good) - not listed - gray (js redirect)
                         // 'link_category' => $url_results->categ->name,
                         // 'link_desc' => $url_results->description,
                         'has_next' => $domain_color == 'green' || $domain_color == 'red' ? false : true,
-                        'icon' => $domain_color == 'green' ? 'success.json' : $domain_color == 'red' ? 'red-warning.json' : '',
+                        'share' => true,
+                        'icon' => $iconcolor,
                         'message' => isset($resp_msgs->first()->message) ? $resp_msgs->first()->message : ''
                     ];
                 }elseif($domainres['is_nic']){
                     $dataset += [
                         'has_next' =>false,
                         'icon' => 'success.json',
-                        'message' => 'يمكنك الوثوق بهذا الموقع'
+                        'message' => 'يمكنك الوثوق بهذا الموقع',
+                        'share' => true
                     ];
                 
                 }else {
@@ -322,6 +333,7 @@ class APImainController extends Controller
             [
                 'step' => 3,
                 'has_next' => false,
+                'share' => false,
                 'icon' => $icon_type,
                 'message' => $resp_msg, 
                 'warning_type' => $warning_type]]);
@@ -452,5 +464,23 @@ class APImainController extends Controller
         curl_close($ch);
         return $code;
     
+    }
+    public function ReportErrorScan (Request $data)
+    {
+        $this->validate($data,[
+            'domain'  => ['required','url'],
+            // 'scan_code'  => ['required'],
+            'scan_result'  => ['required'],
+        ],[
+            'domain.required' => __('Please enter a valid url'),
+            'domain.url' => __('Please enter a valid url')
+        ]);
+
+        ReportMistakes::insertOrIgnore([
+            'url_report' => $data['domain'],
+            'result' => $data['scan_result']
+        ]);
+
+        return response()->json(['success' => true, 'message' => "تم ارسال ملاحظاتكم ... شكرا لكم"]);
     }
 }
