@@ -269,11 +269,11 @@ class APImainController extends Controller
                     $resp_msgs = ScanResponseMessages::where('called_from', $domainres['publicSuffix'])
                     ->orWhere('called_from',$url_results->categ->name);
                     $domain_color = $url_results->type;
-                    $iconcolor = 'not-found.json';
+                    $iconcolor = 'not-found';
                     if($domain_color == 'green'){
-                        $iconcolor = 'success.json' ;
+                        $iconcolor = 'success' ;
                     }elseif( $domain_color == 'red' ){
-                        $iconcolor = 'red-warning.json';
+                        $iconcolor = 'red-warning';
                     }
                     $dataset += [
                         // 'link_color' => $domain_color, //red (bad) - yellow (caution) - green (good) - not listed - gray (js redirect)
@@ -287,7 +287,7 @@ class APImainController extends Controller
                 }elseif($domainres['is_nic']){
                     $dataset += [
                         'has_next' =>false,
-                        'icon' => 'success.json',
+                        'icon' => 'success',
                         'message' => 'يمكنك الوثوق بهذا الموقع',
                         'share' => true
                     ];
@@ -322,11 +322,11 @@ class APImainController extends Controller
         if(count($checkform['found_in_form']) > 0){
             $resp_msg = $domainmessage != '' ? $domainmessage : "نحذر من مشاركة بياناتك الشخصية على هذا الرابط";
             $warning_type = 'red';
-            $icon_type = 'red-warning.json';
+            $icon_type = 'red-warning';
         }else{
             $resp_msg = $domainmessage != '' ? $domainmessage : 'كن حذرا اثناء عند تصفحك لهذا الموقع';
             $warning_type = 'yellow';
-            $icon_type = 'np-progress-loader.json';
+            $icon_type = 'np-progress-loader';
         }
 
         return response()->json(['success' => true, 'data' => 
