@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DomainCategor;
 use App\Models\DomainList;
 use App\Models\LinkAppRequest;
+use App\Models\Newsletters;
 use App\Models\ReportMistakes;
 use App\Models\ScanCond;
 use App\Models\ScanResponseMessages;
@@ -333,6 +334,7 @@ class APImainController extends Controller
             [
                 'step' => 3,
                 'has_next' => false,
+                'posted_link' => $requestdata->scan_url,
                 'share' => false,
                 'icon' => $icon_type,
                 'message' => $resp_msg, 
@@ -481,6 +483,15 @@ class APImainController extends Controller
             'result' => $data['scan_result']
         ]);
 
-        return response()->json(['success' => true, 'message' => "تم ارسال ملاحظاتكم ... شكرا لكم"]);
+        return response()->json(['success' => true, 'data' => [
+            'message' => "تم ارسال ملاحظاتكم ... شكرا لكم",
+            'step' => 0
+            ]]);
+    }
+
+    public function Newsletters($pagenum = 1)
+    {
+        $newsletters = Newsletters::where('is_active',true)->paginate(10);
+        return response()->json($newsletters);
     }
 }
