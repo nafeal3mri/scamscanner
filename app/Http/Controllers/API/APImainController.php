@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\DomainCategor;
 use App\Models\DomainList;
+use App\Models\Sitemeta;
 use App\Models\LinkAppRequest;
 use App\Models\Newsletters;
 use App\Models\ReportMistakes;
@@ -493,5 +494,10 @@ class APImainController extends Controller
     {
         $newsletters = Newsletters::where('is_active',true)->orderBy('created_at','DESC')->paginate(10);
         return response()->json($newsletters);
+    }
+    public function aboutUs()
+    {
+        $aboutus = Sitemeta::firstwhere(['is_active' => true,'meta' => 'about_us']);
+        return response()->json($aboutus);
     }
 }
