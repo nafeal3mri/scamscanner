@@ -491,7 +491,7 @@ class APImainController extends Controller
 
     public function Newsletters($pagenum = 1)
     {
-        $newsletters = Newsletters::where('is_active',true)->paginate(10);
+        $newsletters = Newsletters::where('is_active',true)->paginate(1);
         return response()->json($newsletters);
     }
 }
