@@ -190,7 +190,7 @@ class APImainController extends Controller
                 case 1:
                     $proccess = [
                         'posted_link' => $data['domain'],
-                        'redirected_url' => $data['domain'], //note.. could return bool in some cases.. must return string only
+                        'redirected_url' => $data['domain'] == false || $data['domain'] == true ? '' : $data['domain'], //note.. could return bool in some cases.. must return string only
                         'domain' => $data['domain'],
                         'link_color' => $domaincolor, 
                         'link_category' => $cat,
@@ -260,7 +260,7 @@ class APImainController extends Controller
                 $resp = true;
                 $dataset = [
                     'posted_link' => $requestdata->scan_url,
-                    'redirected_url' => $finalurl,
+                    'redirected_url' => $finalurl == false || $finalurl == true ? $requestdata->scan_url : $finalurl,
                     'domain' => $domainres,
                 ];
                 $check_url = DomainList::with('categ')
