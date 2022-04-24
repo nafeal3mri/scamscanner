@@ -27,7 +27,7 @@ class APImainController extends Controller
 {
     public function iniScannerSteps(Request $data)
     {
-        // sleep(5);
+        sleep(5); 
         $this->validate($data,[
             'domain'  => ['required','url'],
         ],[
@@ -84,7 +84,7 @@ class APImainController extends Controller
             'domain.required' => __('Please enter a valid url')
         ]);
         $urlcode = Str::random(20);
-        // sleep(5);
+        sleep(5);
         LinkAppRequest::insert([
             'scan_url' => $data['domain'],
             'scan_token' => $urlcode,
