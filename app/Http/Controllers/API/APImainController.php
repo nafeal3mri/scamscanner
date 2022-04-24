@@ -419,7 +419,7 @@ class APImainController extends Controller
             curl_setopt($ch, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
             // curl_setopt($ch, CURLOPT_HEADER  , true);
             // curl_setopt($ch, CURLOPT_NOBODY  , true); 
-            // sleep(4);
+            sleep(4);
             $html = curl_exec($ch);
             $redirectedUrl = '';
             if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == 0){
