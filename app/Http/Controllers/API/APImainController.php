@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\DomainCategor;
 use App\Models\DomainList;
-use App\Models\Sitemeta;
+use App\Models\sitemeta;
 use App\Models\LinkAppRequest;
 use App\Models\Newsletters;
 use App\Models\ReportMistakes;
@@ -496,7 +496,7 @@ class APImainController extends Controller
     }
     public function aboutUs()
     {
-        $aboutus = Sitemeta::firstwhere(['is_active' => true,'meta' => 'about_us']);
+        $aboutus = sitemeta::firstwhere(['is_active' => true,'meta' => 'about_us']);
         return response()->json($aboutus);
     }
 }
