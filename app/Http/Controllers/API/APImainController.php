@@ -364,7 +364,7 @@ class APImainController extends Controller
                 if(str_contains(htmlspecialchars_decode($requestdata->page_html),$strlist)){
                     $textfound[] = $strlist;
                 }
-                 if (preg_match('#<\s*?form\b[^>]*>(.*?)</form\b[^>]*>#s', $requestdata->page_html, $match) == 1) {
+                 if (preg_match('#<\s*?form\b[^>]*>(.*?)</form\b[^>]*>#s', htmlspecialchars_decode($requestdata->page_html), $match) == 1) {
                     if(str_contains($match[1],$strlist)){
                         $in_formtext[] = $strlist;
                     }
