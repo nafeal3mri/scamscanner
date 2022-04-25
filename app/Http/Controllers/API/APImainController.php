@@ -431,7 +431,7 @@ class APImainController extends Controller
             }
             if($is_app_req && $token != ''){
                 $linkappreq = LinkAppRequest::firstWhere('scan_token',$token);
-                $linkappreq->page_html = htmlspecialchars($html);
+                $linkappreq->page_html = ($html);
                 $linkappreq->redirected_url = $redirectedUrl;
                 $linkappreq->save();
             }
