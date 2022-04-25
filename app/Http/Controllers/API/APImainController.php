@@ -361,7 +361,7 @@ class APImainController extends Controller
             $textfound = [];
             $in_formtext = [];
             foreach ($newlist as $strlist) {
-                if(str_contains($requestdata->page_html,$strlist)){
+                if(str_contains(htmlspecialchars_decode($requestdata->page_html),$strlist)){
                     $textfound[] = $strlist;
                 }
                  if (preg_match('#<\s*?form\b[^>]*>(.*?)</form\b[^>]*>#s', $requestdata->page_html, $match) == 1) {
@@ -431,7 +431,7 @@ class APImainController extends Controller
             }
             if($is_app_req && $token != ''){
                 $linkappreq = LinkAppRequest::firstWhere('scan_token',$token);
-                $linkappreq->page_html = htmlentities($html);
+                $linkappreq->page_html = htmlspecialchars($html);
                 $linkappreq->redirected_url = $redirectedUrl;
                 $linkappreq->save();
             }
