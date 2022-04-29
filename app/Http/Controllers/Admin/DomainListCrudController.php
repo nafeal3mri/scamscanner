@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\DomainListRequest;
+use App\Models\DomainCategor;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -43,13 +44,22 @@ class DomainListCrudController extends CrudController
         CRUD::column('domain_url');
         CRUD::column('main_domain');
         CRUD::column('type');
-        CRUD::column('category');
-        CRUD::column('page_title');
-        CRUD::column('page_icon');
-        CRUD::column('description');
-        CRUD::column('add_by');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
+        // CRUD::column('category');
+        $this->crud->addColumn([
+            'type'           => 'closure',
+            'name'           => 'category',
+            'label'          => 'category',
+            'function' => function($entry) {
+                return DomainCategor::find($entry)->first()->name ?? '--';
+            }
+        ]);
+    
+        // CRUD::column('page_title');
+        // CRUD::column('page_icon');
+        // CRUD::column('description');
+        // CRUD::column('add_by');
+        // CRUD::column('created_at');
+        // CRUD::column('updated_at');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -68,17 +78,74 @@ class DomainListCrudController extends CrudController
     {
         CRUD::setValidation(DomainListRequest::class);
 
-        CRUD::field('id');
-        CRUD::field('domain_url');
-        CRUD::field('main_domain');
-        CRUD::field('type');
-        CRUD::field('category');
-        CRUD::field('page_title');
-        CRUD::field('page_icon');
-        CRUD::field('description');
-        CRUD::field('add_by');
-        CRUD::field('created_at');
-        CRUD::field('updated_at');
+        // CRUD::field('id');
+        // CRUD::field('domain_url');
+        // CRUD::field('main_domain');
+        // CRUD::field('type');
+        // CRUD::field('category');
+        // CRUD::field('page_title');
+        // CRUD::field('page_icon');
+        // CRUD::field('description');
+        // CRUD::field('add_by');
+        // CRUD::field('created_at');
+        // CRUD::field('updated_at');
+
+        $this->crud->addField([
+            'label' => "Domain",
+            'name' => 'domain_url',
+            'type' => 'domain_url',
+            'inputs_count' => 4,
+            'fill_inputs' => [
+                'main_domain',
+                'page_title',
+                'page_icon',
+                'description'
+            ],
+            'tab' => 'Get Domain data',
+        ]);
+        $this->crud->addField([
+            'name' => 'main_domain',
+            'label'=> 'Host Domain',
+            'type' => 'fill_from_parent',
+            'tab' => 'Get Domain data',
+        ]);
+        $this->crud->addField([
+            'name' => 'page_title',
+            'label'=> 'Site name',
+            'type' => 'fill_from_parent',
+            'tab' => 'Get Domain data',
+        ]);
+        $this->crud->addField([
+            'name' => 'page_icon',
+            'label'=> 'Site icon',
+            'type' => 'fill_from_parent',
+            'tab' => 'Get Domain data',
+        ]);
+        $this->crud->addField([
+            'name' => 'description',
+            'label'=> 'Site Description',
+            'type' => 'fill_from_parent',
+            'tab' => 'Get Domain data',
+        ]);
+        $this->crud->addField([
+                'name'        => 'type',
+                'label'       => "Color type",
+                'type'        => 'select_from_array',
+                'options'     => ['green' => 'Green', 'yellow' => 'Yellow','red' => 'Red'],
+                'allows_null' => false,
+                'default'     => 'green',
+                'tab' => 'Set Domain position',
+        ]);
+        $this->crud->addField([
+                'name'        => 'category',
+                'label'       => "Category",
+                'type'        => 'select',
+                'entity' => 'categ', // the method that defines the relationship in your Model
+                'attribute' => "name", // foreign key attribute that is shown to user
+                'model' => "App\Models\DomainCategor", // foreign key model
+                'tab' => 'Set Domain position',
+        ]);
+        // ->BelongsTo(DomainCategor::class);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

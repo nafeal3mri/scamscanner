@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\DomainCategorRequest;
+use App\Http\Requests\ReportMistakesRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class DomainCategorCrudController
+ * Class ReportMistakesCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class DomainCategorCrudController extends CrudController
+class ReportMistakesCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,9 +26,9 @@ class DomainCategorCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\DomainCategor::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/domain-categor');
-        CRUD::setEntityNameStrings('domain categor', 'domain categors');
+        CRUD::setModel(\App\Models\ReportMistakes::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/report-mistakes');
+        CRUD::setEntityNameStrings('report mistakes', 'report mistakes');
     }
 
     /**
@@ -39,9 +39,13 @@ class DomainCategorCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        $this->crud->removeButton('create');
+        $this->crud->removeButton('update');
+        $this->crud->removeButton('delete');
         CRUD::column('id');
-        CRUD::column('name');
-        CRUD::column('description');
+        CRUD::column('url_report');
+        CRUD::column('scan_id');
+        CRUD::column('result');
         CRUD::column('created_at');
         CRUD::column('updated_at');
 
@@ -60,19 +64,14 @@ class DomainCategorCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(DomainCategorRequest::class);
+        // CRUD::setValidation(ReportMistakesRequest::class);
 
         // CRUD::field('id');
-        // CRUD::field('name');
-        // CRUD::field('description');
+        // CRUD::field('url_report');
+        // CRUD::field('scan_id');
+        // CRUD::field('result');
         // CRUD::field('created_at');
         // CRUD::field('updated_at');
-        $this->crud->addField(
-            ['name' => 'name', 'type' => 'text']
-        );
-        $this->crud->addField(
-            ['name' => 'description', 'type' => 'textarea']
-        );
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

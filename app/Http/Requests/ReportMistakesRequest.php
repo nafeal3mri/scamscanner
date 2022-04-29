@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SusHostsRequest extends FormRequest
+class ReportMistakesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,7 @@ class SusHostsRequest extends FormRequest
     public function rules()
     {
         return [
-            'host_name' => 'required',
-            // 'host_report_email' => 'required'
+            // 'name' => 'required|min:5|max:255'
         ];
     }
 

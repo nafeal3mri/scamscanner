@@ -25,7 +25,8 @@ class StringLookupRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'lookup_text' => 'required',
+            'lookup_type' => 'required'
         ];
     }
 

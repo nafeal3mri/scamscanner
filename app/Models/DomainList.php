@@ -10,6 +10,16 @@ class DomainList extends Model
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use HasFactory;
 
+    protected $fillable = [
+        'domain_url',
+        'main_domain',
+        'type',
+        'category',
+        'page_title',
+        'page_icon',
+        'description'
+    ];
+
     public function categ()
     {
         return $this->belongsTo(DomainCategor::class,'category');

@@ -22,6 +22,7 @@ Route::prefix('v1')->group(function () {
     Route::post('reportURL',[App\Http\Controllers\API\APImainController::class,'ReportErrorScan']); //Scan Url
     Route::get('newsletters',[App\Http\Controllers\API\APImainController::class,'Newsletters']); //Scan Url
     Route::get('about_us',[App\Http\Controllers\API\APImainController::class,'aboutUs']); //Scan Url
+    Route::post('getUrlMeta',[App\Http\Controllers\API\APImainController::class,'getUrlMeta']); //Scan Url
     // Route::post('urlmeta',[App\Http\Controllers\API\APImainController::class,'getlinkMetadata']); //Scan Url
     // Route::post('isredirect',[App\Http\Controllers\API\APImainController::class,'isredirect']); //Scan Url
 

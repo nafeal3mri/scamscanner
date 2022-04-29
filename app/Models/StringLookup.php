@@ -9,4 +9,6 @@ class StringLookup extends Model
 {
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use HasFactory;
+
+    protected $fillable = ['lookup_text','lookup_type'];
 }

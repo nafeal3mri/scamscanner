@@ -62,11 +62,22 @@ class StringLookupCrudController extends CrudController
     {
         CRUD::setValidation(StringLookupRequest::class);
 
-        CRUD::field('id');
+        // CRUD::field('id');
         CRUD::field('lookup_text');
-        CRUD::field('lookup_type');
-        CRUD::field('created_at');
-        CRUD::field('updated_at');
+        $this->crud->addField(
+            [   
+                'name'        => 'lookup_type',
+                'label'       => "Lookup Type",
+                'type'        => 'select_from_array',
+                'options'     => ['form' => 'Form', 'body' => 'Body'],
+                'allows_null' => false,
+                'default'     => 'form',
+                'required'    => true
+            
+            ],
+        );
+        // CRUD::field('created_at');
+        // CRUD::field('updated_at');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

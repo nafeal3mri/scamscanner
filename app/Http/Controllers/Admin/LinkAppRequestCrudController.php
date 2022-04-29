@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\DomainCategorRequest;
+use App\Http\Requests\LinkAppRequestRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class DomainCategorCrudController
+ * Class LinkAppRequestCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class DomainCategorCrudController extends CrudController
+class LinkAppRequestCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,9 +26,9 @@ class DomainCategorCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\DomainCategor::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/domain-categor');
-        CRUD::setEntityNameStrings('domain categor', 'domain categors');
+        CRUD::setModel(\App\Models\LinkAppRequest::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/link-app-request');
+        CRUD::setEntityNameStrings('link app request', 'link app requests');
     }
 
     /**
@@ -40,8 +40,11 @@ class DomainCategorCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('id');
-        CRUD::column('name');
-        CRUD::column('description');
+        CRUD::column('scan_url');
+        CRUD::column('redirected_url');
+        CRUD::column('scan_token');
+        CRUD::column('scan_step');
+        CRUD::column('page_html');
         CRUD::column('created_at');
         CRUD::column('updated_at');
 
@@ -60,19 +63,16 @@ class DomainCategorCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(DomainCategorRequest::class);
+        CRUD::setValidation(LinkAppRequestRequest::class);
 
-        // CRUD::field('id');
-        // CRUD::field('name');
-        // CRUD::field('description');
-        // CRUD::field('created_at');
-        // CRUD::field('updated_at');
-        $this->crud->addField(
-            ['name' => 'name', 'type' => 'text']
-        );
-        $this->crud->addField(
-            ['name' => 'description', 'type' => 'textarea']
-        );
+        CRUD::field('id');
+        CRUD::field('scan_url');
+        CRUD::field('redirected_url');
+        CRUD::field('scan_token');
+        CRUD::field('scan_step');
+        CRUD::field('page_html');
+        CRUD::field('created_at');
+        CRUD::field('updated_at');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

@@ -20,4 +20,6 @@ Route::group([
     Route::crud('domain-categor', 'DomainCategorCrudController');
     Route::crud('string-lookup', 'StringLookupCrudController');
     Route::crud('sus-hosts', 'SusHostsCrudController');
+    Route::crud('report-mistakes', 'ReportMistakesCrudController');
+    Route::crud('link-app-request', 'LinkAppRequestCrudController');
 }); // this should be the absolute last line of this file
