@@ -4,7 +4,7 @@
     <input
         type="text"
         name="{{ $field['name'] }}"
-        value="{{ old($field['name']) ? old($field['name']) : (isset($field['value']) ? $field['value'] : (isset($field['default']) ? $field['default'] : '' )) }}"
+        value="{{ old($field['name']) ? old($field['name']) : (isset($field['value']) ? $field['value'] : (isset($field['default']) ? $field['default'] : '' )) }}{{((isset($_GET['add']) ? $_GET['add'] : ''))}}"
         @include('crud::fields.inc.attributes')
     >
     <hr>

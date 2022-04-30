@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\DomainCategorRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 
 /**
  * Class DomainCategorCrudController
@@ -39,6 +40,15 @@ class DomainCategorCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        Widget::add(
+            [
+                'type' => 'card',
+                'content'    => [
+                    'header' => 'Total Categories', // optional
+                    'body'   => $this->crud->count(),
+                ]
+             ],
+        )->to('before_content');
         CRUD::column('id');
         CRUD::column('name');
         CRUD::column('description');

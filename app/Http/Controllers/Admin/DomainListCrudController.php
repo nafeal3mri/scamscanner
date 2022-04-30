@@ -6,6 +6,7 @@ use App\Http\Requests\DomainListRequest;
 use App\Models\DomainCategor;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 
 /**
  * Class DomainListCrudController
@@ -40,6 +41,15 @@ class DomainListCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        Widget::add(
+            [
+                'type' => 'card',
+                'content'    => [
+                    'header' => 'Total Domains', // optional
+                    'body'   => $this->crud->count(),
+                ]
+             ],
+        )->to('before_content');
         CRUD::column('id');
         CRUD::column('domain_url');
         CRUD::column('main_domain');

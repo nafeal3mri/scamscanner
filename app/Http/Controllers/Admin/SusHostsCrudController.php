@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\SusHostsRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 
 /**
  * Class SusHostsCrudController
@@ -40,6 +41,16 @@ class SusHostsCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        Widget::add(
+            [
+                'type' => 'card',
+                'content'    => [
+                    'header' => 'Total Hosts', // optional
+                    'body'   => $this->crud->count(),
+                ]
+             ],
+        )->to('before_content');
+
         CRUD::column('id');
         CRUD::column('host_name');
         CRUD::column('host_report_email');

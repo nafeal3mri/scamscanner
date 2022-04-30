@@ -6,3 +6,5 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sus-hosts') }}'><i class='nav-icon la la-server'></i> Sus hosts</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('report-mistakes') }}'><i class='nav-icon la la-bug'></i> Report mistakes</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('link-app-request') }}'><i class='nav-icon la la-mobile'></i> Link app requests</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('log') }}'><i class='nav-icon la la-terminal'></i> Logs</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('sitemeta') }}'><i class='nav-icon la la-question'></i> Sitemetas</a></li>
