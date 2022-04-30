@@ -95,7 +95,7 @@ class NewslettersCrudController extends CrudController
             'name'           => 'image_url',
             'label'          => 'Image',
             'value' => function($entry) {
-                return '<img src="'.env('APP_URL').'/storage/'.$entry->image_url.'" width="200" style="max-height:500px;"/>';
+                return '<img src="'.$entry->image_url.'" width="200" style="max-height:500px;"/>';
             }
         ])->afterColumn('content');
         
@@ -140,6 +140,7 @@ class NewslettersCrudController extends CrudController
             'upload'    => true,
             'disk'      => 'public', // if you store files in the /public folder, please omit this; if you store them in /storage or S3, please specify it;
             // optional:
+            
         ]);
         CRUD::field('is_active');
         CRUD::field('is_notify');

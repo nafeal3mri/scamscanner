@@ -338,20 +338,20 @@ class APImainController extends Controller
     public function Newsletters($pagenum = 1)
     {
         $newsletters = Newsletters::where('is_active',true)->orderBy('created_at','DESC')->paginate(10);
-        // return response()->json($newsletters);
-        $newslettersdata = [];
-        foreach ($newsletters as $key => $newsletter) {
-            $newslettersdata += [
-                'id' => $newsletter->id,
-                'title' => $newsletter->title,
-                'content' => $newsletter->content,
-                'image_url' => env('APP_URL').'/storage/'.$newsletter->image_url,
-                'is_active' => $newsletter->is_active,
-                'is_notify' => $newsletter->is_notify,
-                'created_at' => $newsletter->created_at,
-            ];
-        }
-        return $newslettersdata;
+        return response()->json($newsletters);
+        // $newslettersdata = [];
+        // foreach ($newsletters as $key => $newsletter) {
+        //     $newslettersdata += [
+        //         'id' => $newsletter->id,
+        //         'title' => $newsletter->title,
+        //         'content' => $newsletter->content,
+        //         'image_url' => env('APP_URL').'/storage/'.$newsletter->image_url,
+        //         'is_active' => $newsletter->is_active,
+        //         'is_notify' => $newsletter->is_notify,
+        //         'created_at' => $newsletter->created_at,
+        //     ];
+        // }
+        // return $newslettersdata;
 
     }
     public function aboutUs()
