@@ -76,162 +76,8 @@ class APImainController extends Controller
         }
         return $proccess;
     }
-    public function testappapi(Request $data)//delete later
-    {
-        $this->validate($data,[
-            'domain'  => ['required','url'],
-        ],[
-            'domain.required' => __('Please enter a valid url')
-        ]);
-        $urlcode = Str::random(20);
-        sleep(5);
-        LinkAppRequest::insert([
-            'scan_url' => $data['domain'],
-            'scan_token' => $urlcode,
-            'scan_step' => 1
-        ]);
-        return response()->json(['success' => true, 'token' => $urlcode, 'step' => 1]);
-    }
-    public function testappapisteps(Request $data) //delete latr
-    {
-        $this->validate($data,[
-            'token'  => ['required','string'],
-        ],[
-            'token.required' => __('Please enter token')
-        ]);
-        // sleep(5);
-        $requestdata = LinkAppRequest::firstWhere('scan_token',$data['token']);
-        if($data['domain'] == 'https://nafe.me'){
-            $domaincolor = "green";
-            $hasnxt = false;
-            $desc = "This website is good";
-            $cat = "good";
-            $resp_msg = "I'm a good website, don't worry about me";
-            $pagetitle = "Nafe website";
-            
-            $bodycheck = [
-                // 'title_check' => true,
-                // 'has_form' => true,
-                // 'blacklist_text' => true,
-                // 'blacklist_inputs' => false
-            ];
-            $step2msg = "";
-            $hasnxt3 = false;
-        }elseif($data['domain'] == 'https://fake.me'){
-            $domaincolor = "red";
-            $hasnxt = false;
-            $desc = "this link is bad";
-            $cat = "bad";
-            $resp_msg = "i'm a fake website, don't click on me at all";
-            $pagetitle = "Fake Website title";
-            $bodycheck = [
-                // 'title_check' => true,
-                // 'has_form' => true,
-                // 'blacklist_text' => true,
-                // 'blacklist_inputs' => false
-            ];
-            $step2msg = "";
-            $hasnxt3 = false;
-        }elseif($data['domain'] == 'https://form.me'){
-            $domaincolor = "yellow";
-            $hasnxt = true;
-            $desc = "be aware while browsing";
-            $cat = "form";
-            $resp_msg = "i'm a form, i may ask for forbidden data, don't answer it if you find it";
-            $pagetitle = "Google forms title";
-            $bodycheck = [
-                'title_check' => true,
-                'has_form' => true,
-                'blacklist_text' => false,
-                'blacklist_inputs' => false
-            ];
-            $step2msg = "this form doesn't contain any bad inputs";
-            $hasnxt3 = false;
-        }elseif($data['domain'] == 'https://red.me'){
-            $domaincolor = "red";
-            $hasnxt = true;
-            $desc = "it's bad, and here's more data";
-            $cat = "careful";
-            $resp_msg = "i'm a bad website and you have to be careful while browsing";
-            $pagetitle = "";
-            $bodycheck = [
-                'title_check' => true,
-                'has_form' => false,
-                'blacklist_text' => true,
-                'blacklist_inputs' => true
-            ];
-            $step2msg = "don't trust me ";
-            $hasnxt3 = false;
-        }else{
-            $domaincolor = "not listed";
-            $hasnxt = true;
-            $desc = "";
-            $cat = "";
-            $resp_msg = "no data now, move to next";
-            $pagetitle = "Fake DHL website";
-            $bodycheck = [
-                'title_check' => true,
-                'has_form' => false,
-                'blacklist_text' => true,
-                'blacklist_inputs' => false
-            ];
-            $step2msg = "don't trust me ";
-            $hasnxt3 = true;
-            $whoisdata = [
-                'creation_date' => '01/03/2022'
-            ];
-            $hasnext4 = true;
-            $finalmsg = 'don\'t trust this link at all';
-        }
-        $proccess = [];
-        if(isset($requestdata)){
-            switch ($requestdata->scan_step) {
-                case 1:
-                    $proccess = [
-                        'posted_link' => $data['domain'],
-                        'redirected_url' => $data['domain'] == false || $data['domain'] == true ? '' : $data['domain'], //note.. could return bool in some cases.. must return string only
-                        'domain' => $data['domain'],
-                        'link_color' => $domaincolor, 
-                        'link_category' => $cat,
-                        'link_desc' => $desc,
-                        'message' => $resp_msg,
-                        'next_step' => $hasnxt,
-                    ]; //check database
-                    $requestdata->scan_step = 2;
-                    $requestdata->save();
-                    break;
-                case 2:
-                    $proccess = [
-                        'redirected_url' => $data['domain'],
-                        'domain' => $data['domain'],
-                        'title' => $pagetitle,
-                        'next_step_3' => $hasnxt3
-                    ];//check link meta
-                    $requestdata->scan_step = 3;
-                    $requestdata->save();
-                    break;
-                case 3:
-                    $proccess = [
-                        'body_check' => $bodycheck,
-                        'next_step_3' => $hasnext4
-                    ];//check page content
-                    $requestdata->scan_step = 4;
-                    $requestdata->save();
-                    break;
-                case 4:
-                    $proccess = [
-                        'whois_creation_date' => $bodycheck,
-                        'resp_message' => $finalmsg
-                    ];//check page content
-                    break;
-                
-                default:
-                    break;
-            }
-        }
 
-        return $proccess;
-    }
+
     public function testnotifapp()//delete later
     {
         return [ 
@@ -498,5 +344,21 @@ class APImainController extends Controller
     {
         $aboutus = sitemeta::firstwhere(['is_active' => true,'meta' => 'about_us']);
         return response()->json($aboutus);
+    }
+
+    public function getUrlMeta(Request $data){
+        $this->validate($data,[
+            'domain'  => ['required','url'],
+        ],[
+            'domain.required' => __('Please enter a valid url'),
+        ]);
+        $domaindata = OpenGraph::fetch($data['domain']);
+        $main_domain = parse_url($data['domain'])['host'];
+        return response()->json([
+            'main_domain' =>  $main_domain,
+            'page_title' => $domaindata['title'],
+            'description' => $domaindata['description'],
+            'page_icon' => $domaindata['image'],
+        ]);
     }
 }

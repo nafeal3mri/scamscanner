@@ -7,5 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SusHosts extends Model
 {
+    use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use HasFactory;
+    protected $fillable = ['host_name','host_report_email'];
+
 }
