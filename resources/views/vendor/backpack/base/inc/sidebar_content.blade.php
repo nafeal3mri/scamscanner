@@ -8,3 +8,4 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('link-app-request') }}'><i class='nav-icon la la-mobile'></i> Link app requests</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('log') }}'><i class='nav-icon la la-terminal'></i> Logs</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sitemeta') }}'><i class='nav-icon la la-question'></i> Sitemetas</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('newsletters') }}'><i class='nav-icon la la-question'></i> Newsletters</a></li>

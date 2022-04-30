@@ -24,4 +24,5 @@ Route::group([
     Route::crud('link-app-request', 'LinkAppRequestCrudController');
     Route::Post('update_report_status', [App\Http\Controllers\Admin\ReportMistakesCrudController::class,'updateReportStatus']);
     Route::crud('sitemeta', 'SitemetaCrudController');
+    Route::crud('newsletters', 'NewslettersCrudController');
 }); // this should be the absolute last line of this file
