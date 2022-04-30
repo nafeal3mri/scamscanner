@@ -339,8 +339,9 @@ class APImainController extends Controller
     {
         $newsletters = Newsletters::where('is_active',true)->orderBy('created_at','DESC')->paginate(10);
         // return response()->json($newsletters);
+        $newslettersdata = [];
         foreach ($newsletters as $key => $newsletter) {
-            $newslettersdata[] = [
+            $newslettersdata += [
                 'id' => $newsletter->id,
                 'title' => $newsletter->title,
                 'content' => $newsletter->content,
