@@ -26,7 +26,7 @@ class SitemetaCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Sitemeta::class);
+        CRUD::setModel(\App\Models\sitemeta::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/sitemeta');
         CRUD::setEntityNameStrings('sitemeta', 'sitemetas');
     }
