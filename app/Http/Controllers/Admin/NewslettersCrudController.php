@@ -95,7 +95,7 @@ class NewslettersCrudController extends CrudController
             'name'           => 'image_url',
             'label'          => 'Image',
             'value' => function($entry) {
-                return '<img src="'.env('APP_URL').'/'.$entry->image_url.'" />';
+                return '<img src="'.env('APP_URL').'/storage/'.$entry->image_url.'" width="200" style="max-height:500px;"/>';
             }
         ])->afterColumn('content');
         
