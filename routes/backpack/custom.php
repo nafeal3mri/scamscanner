@@ -25,4 +25,5 @@ Route::group([
     Route::Post('update_report_status', [App\Http\Controllers\Admin\ReportMistakesCrudController::class,'updateReportStatus']);
     Route::crud('sitemeta', 'SitemetaCrudController');
     Route::crud('newsletters', 'NewslettersCrudController');
+    Route::crud('scan-response-messages', 'ScanResponseMessagesCrudController');
 }); // this should be the absolute last line of this file
