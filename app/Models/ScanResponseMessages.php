@@ -14,5 +14,6 @@ class ScanResponseMessages extends Model
         'called_from',
         'scan_type',
         'message',
+        'resp_color',
     ];
 }

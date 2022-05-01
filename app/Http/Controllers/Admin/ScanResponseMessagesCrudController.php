@@ -44,7 +44,7 @@ class ScanResponseMessagesCrudController extends CrudController
         CRUD::column('scan_type');
         CRUD::column('called_from');
         CRUD::column('message');
-        // CRUD::column('created_at');
+        CRUD::column('resp_color');
         // CRUD::column('updated_at');
 
         /**
@@ -88,6 +88,18 @@ class ScanResponseMessagesCrudController extends CrudController
         ]);
         // CRUD::field('called_from');
         CRUD::field('message');
+        $this->crud->addField([
+            'name' => 'resp_color',
+            'label' => 'Select scan color',
+            'type'        => 'select_from_array',
+            'options'     => [
+                'green' => 'Green', 
+                'red' => 'Red',
+                'yellow' => 'Yellow',
+                'grey' => 'Grey'
+            ],
+            'allows_null' => false,
+        ]);
         // CRUD::field('created_at');
         // CRUD::field('updated_at');
 
