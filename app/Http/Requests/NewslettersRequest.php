@@ -28,8 +28,8 @@ class NewslettersRequest extends FormRequest
             'title' => 'required',
             'content' => 'required',
             'image_url' => 'mimes:jpg,png,jpeg',
-            'is_active' => 'required',
-            'is_notify' => 'required',
+            // 'is_active' => 'required',
+            // 'is_notify' => 'required',
         ];
     }
 
