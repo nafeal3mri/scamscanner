@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\NewslettersRequest;
+use App\Models\Newsletters;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-
+use Illuminate\Http\Request;
+use OneSignal;
 /**
  * Class NewslettersCrudController
  * @package App\Http\Controllers\Admin
@@ -63,6 +65,8 @@ class NewslettersCrudController extends CrudController
             }
         ]);
         CRUD::column('created_at');
+        $this->crud->addButtonFromView('line', 'send_notification_newsletter', 'send_notification_newsletter', 'end');
+
         // CRUD::column('updated_at');
 
         /**
@@ -98,7 +102,7 @@ class NewslettersCrudController extends CrudController
                 return '<img src="'.$entry->image_url.'" width="200" style="max-height:500px;"/>';
             }
         ])->afterColumn('content');
-        
+
 
         // // or maybe remove a column
         // $this->crud->removeButton('update');
@@ -143,7 +147,9 @@ class NewslettersCrudController extends CrudController
             
         ]);
         CRUD::field('is_active');
-        CRUD::field('is_notify');
+
+
+        // CRUD::field('is_notify');
         // CRUD::field('created_at');
         // CRUD::field('updated_at');
 
@@ -163,6 +169,29 @@ class NewslettersCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function sendNewslettersNotification(Request $request)
+    {
+        $this->validate($request,[
+            'id_n'  => ['required'],
+        ]);
+        $get_newsletter = Newsletters::find($request['id_n']);
+        // where(['id' => $request['id_n'],'is_notify' => false])->get();
+        if($get_newsletter->count() > 0){
+            OneSignal::sendNotificationToAll(
+                $get_newsletter->title, 
+                $url = null, 
+                $data = ['post_id'=>$get_newsletter->id], 
+                $buttons = null, 
+                $schedule = null
+            );
+            $get_newsletter->is_notify = true;
+            $get_newsletter->save();
+            return redirect()->back()->with('message','Notification sent');
+        }else{
+            return redirect()->back()->with('message','Request ignored');
+        }
     }
 
 }

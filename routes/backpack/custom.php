@@ -22,8 +22,12 @@ Route::group([
     Route::crud('sus-hosts', 'SusHostsCrudController');
     Route::crud('report-mistakes', 'ReportMistakesCrudController');
     Route::crud('link-app-request', 'LinkAppRequestCrudController');
-    Route::Post('update_report_status', [App\Http\Controllers\Admin\ReportMistakesCrudController::class,'updateReportStatus']);
     Route::crud('sitemeta', 'SitemetaCrudController');
     Route::crud('newsletters', 'NewslettersCrudController');
     Route::crud('scan-response-messages', 'ScanResponseMessagesCrudController');
+
+
+    Route::Post('update_report_status', [App\Http\Controllers\Admin\ReportMistakesCrudController::class,'updateReportStatus']);
+    Route::Post('send_newsletter_notification', [App\Http\Controllers\Admin\NewslettersCrudController::class,'sendNewslettersNotification']);
+
 }); // this should be the absolute last line of this file
