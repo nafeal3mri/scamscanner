@@ -25,6 +25,7 @@ Route::group([
     Route::crud('sitemeta', 'SitemetaCrudController');
     Route::crud('newsletters', 'NewslettersCrudController');
     Route::crud('scan-response-messages', 'ScanResponseMessagesCrudController');
+    Route::crud('notification-center', 'NotificationCenterCrudController');
 
 
     Route::Post('update_report_status', [App\Http\Controllers\Admin\ReportMistakesCrudController::class,'updateReportStatus']);
