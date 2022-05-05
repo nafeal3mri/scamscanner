@@ -171,7 +171,9 @@ class APImainController extends Controller
             $warning_type = 'red';
             $icon_type = 'red-warning';
         }else{
-            $resp_msg = $domainmessage != '' ? $domainmessage : 'كن حذرا اثناء عند تصفحك لهذا الموقع';
+            $resp_msg = $domainmessage != '' ? $domainmessage : '
+            لم تكتشف الأداة أي مؤشر على أن الرابط المدخل هو رابط وهمي، لكن ننصحك بعدم افشاء معلوماتك الخاصة اثناء تصفح الموقع، يمكنك الابلاغ عن نتيجة غير دقيقة وسوف نتابع طلبك
+            ';
             $warning_type = 'yellow';
             $icon_type = 'np-progress-loader';
         }
