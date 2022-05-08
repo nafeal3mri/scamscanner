@@ -373,9 +373,9 @@ class APImainController extends Controller
         $main_domain = parse_url($data['domain'])['host'];
         return response()->json([
             'main_domain' =>  $main_domain,
-            'page_title' => $domaindata['title'],
-            'description' => $domaindata['description'],
-            'page_icon' => $domaindata['image'],
+            'page_title' => $domaindata['title'] ?? '',
+            'description' => $domaindata['description'] ?? '',
+            'page_icon' => $domaindata['image'] ?? '',
         ]);
     }
 }
