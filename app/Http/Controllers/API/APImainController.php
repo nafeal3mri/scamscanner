@@ -135,6 +135,7 @@ class APImainController extends Controller
                     ];
                     $requestdata->scan_result_color = $domain_color;
                     $requestdata->scan_result_msg = $respmsg;
+                    $requestdata->save();
                 }elseif($domainres['is_nic']){
                     $dataset += [
                         'has_next' =>false,
@@ -142,7 +143,9 @@ class APImainController extends Controller
                         'message' => 'يمكنك الوثوق بهذا الموقع',
                         'share' => true
                     ];
-                
+                    $requestdata->scan_result_color = 'green';
+                    $requestdata->scan_result_msg = 'يمكنك الوثوق بهذا الموقع';
+                    $requestdata->save();
                 }else {
                     $dataset['has_next'] = true;
                     $requestdata->scan_step = 2;
@@ -181,7 +184,9 @@ class APImainController extends Controller
             $warning_type = 'yellow';
             $icon_type = 'np-progress-loader';
         }
-
+        $requestdata->scan_result_color = $warning_type;
+        $requestdata->scan_result_msg = $resp_msg;
+        $requestdata->save();
         return response()->json(['success' => true, 'data' => 
             [
                 'step' => 3,
