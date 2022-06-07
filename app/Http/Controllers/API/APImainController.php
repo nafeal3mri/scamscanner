@@ -123,6 +123,7 @@ class APImainController extends Controller
                     }elseif( $domain_color == 'red' ){
                         $iconcolor = 'red-warning';
                     }
+                    $respmsg = isset($resp_msgs->first()->message) ? $resp_msgs->first()->message : '';
                     $dataset += [
                         // 'link_color' => $domain_color, //red (bad) - yellow (caution) - green (good) - not listed - gray (js redirect)
                         // 'link_category' => $url_results->categ->name,
@@ -130,8 +131,10 @@ class APImainController extends Controller
                         'has_next' => $domain_color == 'green' || $domain_color == 'red' ? false : true,
                         'share' => true,
                         'icon' => $iconcolor,
-                        'message' => isset($resp_msgs->first()->message) ? $resp_msgs->first()->message : ''
+                        'message' => $respmsg
                     ];
+                    $requestdata->scan_result_color = $domain_color;
+                    $requestdata->scan_result_msg = $respmsg;
                 }elseif($domainres['is_nic']){
                     $dataset += [
                         'has_next' =>false,
