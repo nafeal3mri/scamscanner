@@ -7,5 +7,7 @@ return [
     'Green results' => 'نتائج خضراء.',
     'Red results' => 'نتائج حمراء.',
     'Yellow results' => 'نتائج صفراء.',
-    'Grey results' => 'نتائج رمادية'
+    'Grey results' => 'نتائج رمادية',
+    'Rescan' => 'اعادة الفحص',
+    'Move to list' => 'نقل الى قائمة الروابط',
 ];

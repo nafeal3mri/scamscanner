@@ -58,8 +58,10 @@ class LinkAppRequestCrudController extends CrudController
         CRUD::column('scan_url');
         CRUD::column('redirected_url');
         // CRUD::column('scan_token');
-        CRUD::column('scan_step');
+        // CRUD::column('scan_step');
         CRUD::column('scan_result_color');
+        $this->crud->addButtonFromView('line', 'recheck_url', 'recheck_url', 'end');
+
         // CRUD::column('created_at');
         // CRUD::column('updated_at');
 
