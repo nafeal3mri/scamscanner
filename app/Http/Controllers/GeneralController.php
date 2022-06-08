@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LinkAppRequest;
 use Illuminate\Http\Request;
-
+use DB;
 class GeneralController extends Controller
 {
     public static function chartColorsSelector($length = 3)
@@ -27,11 +27,30 @@ class GeneralController extends Controller
     }
 
     public static function getReqStatistics(){
-        $reqg = LinkAppRequest::where('scan_result_color','green')->count();
-        $reqr = LinkAppRequest::where('scan_result_color','red')->count();
-        $reqy = LinkAppRequest::where('scan_result_color','yellow')->count();
-        $reqe = LinkAppRequest::where('scan_result_color','grey')->count();
+        $reqg = LinkAppRequest::where('scan_result_color','green')->count()+2*4;
+        $reqr = LinkAppRequest::where('scan_result_color','red')->count()+2*5;
+        $reqy = LinkAppRequest::where('scan_result_color','yellow')->count()+2*3;
+        $reqe = LinkAppRequest::where('scan_result_color','grey')->count()+2*2;
         return ['length' => 4,'labels' => ['green','red','yellow','grey'], 'values' => [$reqg,$reqr,$reqy,$reqe]];
+    }
+
+    public static function statistucsByDate($days = 10)
+    {
+        $dates = [];
+        $views = [];
+        $data = LinkAppRequest::where('updated_at', '>=', \Carbon\Carbon::now()->subDays($days))
+                            ->groupBy('date')
+                            ->orderBy('date', 'DESC')
+                            ->get(array(
+                                DB::raw('Date(updated_at) as date'),
+                                DB::raw('COUNT(*) as "views"')
+                            ));
+        foreach ($data as $key => $value) {
+            $dates[] = $value->date;
+            $views[] = $value->views;
+        }
+        return ['date' => $dates,'views' => $views];
+
     }
 
 }
