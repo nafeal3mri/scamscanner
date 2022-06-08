@@ -31,7 +31,7 @@ class GeneralController extends Controller
         $reqr = LinkAppRequest::where('scan_result_color','red')->count()+2*5;
         $reqy = LinkAppRequest::where('scan_result_color','yellow')->count()+2*3;
         $reqe = LinkAppRequest::where('scan_result_color','grey')->count()+2*2;
-        return ['length' => 4,'labels' => ['green','red','yellow','grey'], 'values' => [$reqg,$reqr,$reqy,$reqe]];
+        return ['length' => 4,'total' => LinkAppRequest::count(),'today' => LinkAppRequest::where('updated_at', date("Y-m-d"))->count(),'labels' => ['green','red','yellow','grey'], 'values' => [$reqg,$reqr,$reqy,$reqe]];
     }
 
     public static function statistucsByDate($days = 10)

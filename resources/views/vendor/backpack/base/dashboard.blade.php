@@ -38,10 +38,31 @@ $daysstat = GeneralController::statistucsByDate(10);
                 // 'display_grid' => 'false',
                 
             ],
+],
+        [
+            'type'       => 'card',
+            'wrapper' => ['class' => 'col-sm-6 col-md-4'], // optional
+            'class'   => 'card bg-green text-white', // optional
+            'content'    => [
+                'header' => 'Total requests', // optional
+                'body'   => "<span class='h2'>".$stat['total']."</span class='h4'>Request All time<span></span><br>
+                <span class='h2'>".$stat['today']."</span class='h4'>Request today<span></span>",
+            ]
         ]
         ]
     ];
+
 @endphp
 
 @section('content')
+
+<form action="" method="post">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <button class="btn btn-default" type="button">{{trans('base.Scan')}}</button>
+        </div>
+        <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+      </div>
+</form>
+
 @endsection

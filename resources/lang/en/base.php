@@ -10,5 +10,6 @@ return [
     'Grey results' => 'Grey results',
     'Rescan' => 'Rescan',
     'Move to list' => 'Move to list',
+    'Scan' => 'Scan',
 
 ];
