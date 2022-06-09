@@ -16,6 +16,7 @@ var options = {
     chart: {
         type: "{{$widget['content']['type'] ?? 'doughnut' }}",
         height: '100px',
+        margin: 0,
         zoom: {
             enabled: false
         },
@@ -36,6 +37,10 @@ var options = {
             offsetY: 10
           }
         },
+        legend: {
+            position: 'right'
+        },
+        
     @endif
     @if($widget['content']['type'] == 'area' )
     [{
@@ -61,9 +66,7 @@ var options = {
             show:false
         }
     },
-    grid: {
-            show: false,
-        },
+
     stroke: {
         curve: 'smooth',
     },
@@ -78,6 +81,19 @@ var options = {
     dataLabels: {
         enabled: false
     },
+    grid: {
+            show: false,
+            padding: {
+                left: 0,
+                right: 0,
+                // top: 0,
+                top: -10,
+                bottom: -20
+            },
+            // padding: {
+                       
+            //         }
+        },
 }
 
 var {{$widget['content']['chart_id']}} = new ApexCharts(document.querySelector("#{{$widget['content']['chart_id']}}"), options);
