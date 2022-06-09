@@ -1,11 +1,10 @@
 ﻿<div class="{{$widget['wrapper']['class'] ?? 'col-sm-6 col-md-4'}}">
 <div class="card {{$widget['class'] ?? ''}}">
     <div class="card-header">{{$widget['content']['title'] ?? ''}}</div>
-    <div class="card-body">{{$widget['content']['body'] ?? ''}}<br>
-        <canvas id="{{$widget['content']['chart_id']}}" 
-        style="min-width:300px;height:80px"
-        {{-- style="width:100%;height:auto" --}}
-        ></canvas>
+    <div class="card-body {{$widget['body_class'] ?? ''}}">{{$widget['content']['body'] ?? ''}}<br>
+        <div id="{{$widget['content']['chart_id']}}" 
+        {{-- style="width:100%;max-height:100px" --}}
+        ></div>
 
     </div>
 </div>
@@ -13,52 +12,77 @@
 
 @push('after_scripts')
 <script>
-    const {{$widget['content']['chart_id']}} = document.getElementById("{{$widget['content']['chart_id']}}").getContext('2d');
-const {{$widget['content']['chart_id']}}_chart = new Chart({{$widget['content']['chart_id']}}, {
-    type: "{{$widget['content']['type'] ?? 'doughnut' }}",
-    data: {
-        labels: {!! json_encode($widget['content']['data']['labels']) ?? [] !!},
-        datasets: [{
-            data: {!! json_encode($widget['content']['data']['numbers']) ?? [] !!},
-            backgroundColor: {!! json_encode($widget['content']['colors']) ?? [] !!},
-        hoverOffset: 8,
-        cutout: '1',
-        fill: false,
-        tension: 0.8
-        },]
-    },
-    options: {
-        responsive:false,
-        plugins: {
-            legend:{
-                display: {{$widget['content']['display_legend'] ?? 'true' }},
-                position: 'right',
-                labels:{
-                    usePointStyle: true,
-                    pointStyle: 'circle',
-                    boxWidth: 10,
-                }
-            }
+var options = {
+    chart: {
+        type: "{{$widget['content']['type'] ?? 'doughnut' }}",
+        height: '100px',
+        zoom: {
+            enabled: false
         },
-        @if($widget['content']['type'] == 'line')
-        scales: {
-            xAxis: {
-                display:true,
-                grid:{
-                    display:false
-                }
-            },
-            yAxis: {
-                display:false,
-                grid:{
-                    display:false
-                }
-            }
+        toolbar: {
+            show: false,
+        },
+        
+        stacked: false,
+    },
+    series: 
+    @if($widget['content']['type'] == 'donut' )
+    {!! json_encode ($widget['content']['data']['numbers']) ?? [] !!},
+    labels: {!! json_encode ($widget['content']['data']['labels']) ?? [] !!},
+    plotOptions: {
+          pie: {
+            startAngle: -90,
+            endAngle: 90,
+            offsetY: 10
+          }
+        },
+    @endif
+    @if($widget['content']['type'] == 'area' )
+    [{
+        name: "{{$widget['content']['data']['data_name'] ?? ''}}",
+        data: {!! json_encode ($widget['content']['data']['numbers']) ?? [] !!}
+    }],
+
+   
+    xaxis: {
+        categories: {!! json_encode ($widget['content']['data']['labels']) ?? [] !!},
+        labels:{
+            show:false
+        },
+        axisBorder: {
+            show: false
+        },
+        axisTicks: {
+            show: false,
+        },
+    },
+    yaxis: {
+        labels:{
+            show:false
         }
-        @endif
-    }
-    
-});
+    },
+    grid: {
+            show: false,
+        },
+    stroke: {
+        curve: 'smooth',
+    },
+    fill: {
+        type: 'gradient'
+    },
+
+    markers: {
+        size: 0,
+    },
+    @endif
+    dataLabels: {
+        enabled: false
+    },
+}
+
+var {{$widget['content']['chart_id']}} = new ApexCharts(document.querySelector("#{{$widget['content']['chart_id']}}"), options);
+
+{{$widget['content']['chart_id']}}.render();
 
 </script>
 @endpush
