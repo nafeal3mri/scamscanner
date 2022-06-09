@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LinkAppRequest;
 use App\Models\ReportMistakes;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
 class GeneralController extends Controller
@@ -35,7 +36,7 @@ class GeneralController extends Controller
         return [
             'length' => 4,
             'total' => LinkAppRequest::count(),
-            'today' => LinkAppRequest::where('created_at', date("Y-m-d"))->count(),
+            'today' => LinkAppRequest::whereDate('created_at', Carbon::today())->count(),
             'reports' =>ReportMistakes::where('status','new')->count(),
             'labels' => ['green','red','yellow','grey'], 
             'values' => [$reqg,$reqr,$reqy,$reqe]];
@@ -45,7 +46,7 @@ class GeneralController extends Controller
     {
         $dates = [];
         $views = [];
-        $data = LinkAppRequest::where('created_at', '>=', \Carbon\Carbon::now()->subDays($days))
+        $data = LinkAppRequest::where('created_at', '>=', Carbon::now()->subDays($days))
                             ->groupBy('date')
                             ->orderBy('date', 'DESC')
                             ->get(array(
@@ -58,6 +59,11 @@ class GeneralController extends Controller
         }
         return ['date' => $dates,'views' => $views];
 
+    }
+
+    public static function getLatestScans()
+    {
+        return LinkAppRequest::whereNotNull('scan_result_color')->orderBy('created_at','DESC')->limit(5)->get();
     }
 
 }

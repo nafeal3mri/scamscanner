@@ -13,5 +13,8 @@ return [
     'Scan' => 'Scan',
     'Scan URL' => 'Scan URL',
     'Latest scans' => 'Latest scans',
+    'Site' => 'Site',
+    'Result' => 'Result',
+    'View All' => 'View All',
 
 ];

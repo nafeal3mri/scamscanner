@@ -83,7 +83,28 @@ $daysstat = GeneralController::statistucsByDate(70);
         <div class="card">
             <div class="card-header">{{trans('base.Latest scans')}}</div>
             <div class="card-body">
-                
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr class="text-center">
+                            <th>{{trans('base.Site')}}</th>
+                            <th>{{trans('base.Result')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (GeneralController::getLatestScans() as $scan)
+                        <tr>
+                            <td>
+                                {!! mb_strimwidth($scan->scan_url,0,20,'...') !!}
+                            </td>
+                            <td>
+                                {{$scan->scan_result_color}}
+                            </td>
+                        </tr>
+                        @endforeach
+                        
+                    </tbody>
+                </table>
+                <a href="{{ backpack_url('link-app-request') }}" class="btn btn-primary btn-block">{{trans('base.View All')}}</a>
             </div>
         </div>
     </div>
