@@ -15,8 +15,8 @@
 var options = {
     chart: {
         type: "{{$widget['content']['type'] ?? 'doughnut' }}",
-        height: '100px',
-        margin: 0,
+        height: '150px',
+        // margin: 0,
         zoom: {
             enabled: false
         },
@@ -84,7 +84,7 @@ var options = {
     grid: {
             show: false,
             padding: {
-                left: 0,
+                left: -10,
                 right: 0,
                 // top: 0,
                 top: -10,

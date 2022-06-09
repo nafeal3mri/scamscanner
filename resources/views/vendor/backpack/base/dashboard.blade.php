@@ -5,13 +5,14 @@ $stat = GeneralController::getReqStatistics();
 $daysstat = GeneralController::statistucsByDate(70);
     $widgets['before_content'][] = [
     'type'    => 'div',
-    'class'   => 'row',
+    'class'   => 'row row-eq-height',
     'content' => [ 
        
         [
             'type'    => 'chart_card',
             'wrapper' => ['class' => 'col-sm-6 col-md-4'],
-            'body_class' => 'p-0',
+            'body_class' => 'p-0 ',
+            'class' => 'h-250',
             'content' => [
                 'title' => 'Scan count',
                 'data' => [
@@ -26,9 +27,10 @@ $daysstat = GeneralController::statistucsByDate(70);
         [
             'type'    => 'chart_card',
             'wrapper' => ['class' => 'col-sm-6 col-md-4 p-0'],
-            'body_class' => 'p-0',
+            'class' => 'h-250',
+            'body_class' => 'p-0 ',
             'content' => [
-                'title' => 'statistics in 10 days',
+                'title' => 'Scans in 10 days',
                 'data' => [
                     'labels' => $daysstat['date'],
                     'numbers' => $daysstat['views'],
@@ -44,12 +46,15 @@ $daysstat = GeneralController::statistucsByDate(70);
 ],
         [
             'type'       => 'card',
-            'wrapper' => ['class' => 'col-sm-6 col-md-4'], // optional
-            'class'   => 'card bg-green text-white', // optional
+            'wrapper' => ['class' => 'col-sm-6 col-md-4 '], 
+            'class'   => 'card bg-green text-white h-250',
             'content'    => [
-                'header' => 'Total requests', // optional
-                'body'   => "<span class='h2'>".$stat['total']."</span class='h4'>Request All time<span></span><br>
-                <span class='h2'>".$stat['today']."</span class='h4'>Request today<span></span>",
+                'header' => 'Scans', // optional
+                'body'   => "<span class='h2'>".$stat['total']."</span> <span class=''>Scans All time<span></span><br>
+                <span class='h2'>".$stat['today']."</span> <span class=''>today's scans<span></span><br>
+                <span class='h3'>".$stat['reports']."</span> <span class=''>Unresolved reports<span></span>
+                
+                ",
             ]
         ]
         ]
@@ -58,14 +63,37 @@ $daysstat = GeneralController::statistucsByDate(70);
 @endphp
 
 @section('content')
-
-<form action="" method="post">
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <button class="btn btn-default" type="button">{{trans('base.Scan')}}</button>
+<div class="row">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-body">
+                <form action="" method="post">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <button class="btn btn-default" type="button">{{trans('base.Scan')}}</button>
+                        </div>
+                        <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                      </div>
+                </form>
+            </div>
         </div>
-        <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
-      </div>
-</form>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 @endsection
