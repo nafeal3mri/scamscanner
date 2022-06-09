@@ -35,11 +35,14 @@ class APImainController extends Controller
             'domain.url' => __('Please enter a valid url')
         ]);
         $urlcode = Str::random(20);
-        LinkAppRequest::insert([
-            'scan_url' => $data['domain'],
-            'scan_token' => $urlcode,
-            'scan_step' => 1
-        ]);
+        $ln = new LinkAppRequest;
+        // insert([
+            $ln->scan_url = $data['domain'];
+            $ln->scan_token = $urlcode;
+            $ln->scan_step = 1;
+            $ln->save();
+        // ]);
+
         return response()->json(['success' => true, 'token' => $urlcode, 
         'data'=>['step' => 1,'has_next' => true]
     ]);

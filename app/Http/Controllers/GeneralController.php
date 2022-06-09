@@ -35,7 +35,7 @@ class GeneralController extends Controller
         return [
             'length' => 4,
             'total' => LinkAppRequest::count(),
-            'today' => LinkAppRequest::where('updated_at', date("Y-m-d"))->count(),
+            'today' => LinkAppRequest::where('created_at', date("Y-m-d"))->count(),
             'reports' =>ReportMistakes::where('status','new')->count(),
             'labels' => ['green','red','yellow','grey'], 
             'values' => [$reqg,$reqr,$reqy,$reqe]];
@@ -45,11 +45,11 @@ class GeneralController extends Controller
     {
         $dates = [];
         $views = [];
-        $data = LinkAppRequest::where('updated_at', '>=', \Carbon\Carbon::now()->subDays($days))
+        $data = LinkAppRequest::where('created_at', '>=', \Carbon\Carbon::now()->subDays($days))
                             ->groupBy('date')
                             ->orderBy('date', 'DESC')
                             ->get(array(
-                                DB::raw('Date(updated_at) as date'),
+                                DB::raw('Date(created_at) as date'),
                                 DB::raw('COUNT(*) as "views"')
                             ));
         foreach ($data as $key => $value) {
