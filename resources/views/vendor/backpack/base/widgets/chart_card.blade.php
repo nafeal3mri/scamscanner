@@ -1,7 +1,7 @@
 ﻿<div class="{{$widget['wrapper']['class'] ?? 'col-sm-6 col-md-4'}}">
 <div class="card {{$widget['class'] ?? ''}}">
     <div class="card-header">{{$widget['content']['title'] ?? ''}}</div>
-    <div class="card-body {{$widget['body_class'] ?? ''}}">{{$widget['content']['body'] ?? ''}}<br>
+    <div class="card-body {{$widget['body_class'] ?? ''}}">
         <div id="{{$widget['content']['chart_id']}}" 
         {{-- style="width:100%;max-height:100px" --}}
         ></div>
@@ -15,8 +15,7 @@
 var options = {
     chart: {
         type: "{{$widget['content']['type'] ?? 'doughnut' }}",
-        height: '150px',
-        // margin: 0,
+        height: '113%',
         zoom: {
             enabled: false
         },
@@ -81,14 +80,23 @@ var options = {
     dataLabels: {
         enabled: false
     },
+    layout: {
+        padding: {
+            bottom: -20
+        },
+        margin: {
+            bottom: -20
+        },
+    },
+
     grid: {
             show: false,
             padding: {
                 left: -10,
                 right: 0,
                 // top: 0,
-                top: -10,
-                bottom: -20
+                // top: -10,
+                bottom: -5
             },
             // padding: {
                        

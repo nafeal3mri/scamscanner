@@ -47,7 +47,7 @@ $daysstat = GeneralController::statistucsByDate(70);
         [
             'type'       => 'card',
             'wrapper' => ['class' => 'col-sm-6 col-md-4 '], 
-            'class'   => 'card bg-green text-white h-250',
+            'class'   => 'card bg-purple text-white h-250',
             'content'    => [
                 'header' => 'Scans', // optional
                 'body'   => "<span class='h2'>".$stat['total']."</span> <span class=''>Scans All time<span></span><br>
@@ -64,8 +64,9 @@ $daysstat = GeneralController::statistucsByDate(70);
 
 @section('content')
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-8">
         <div class="card">
+            <div class="card-header">{{trans('base.Scan URL')}}</div>
             <div class="card-body">
                 <form action="" method="post">
                     <div class="input-group mb-3">
@@ -80,18 +81,13 @@ $daysstat = GeneralController::statistucsByDate(70);
     </div>
     <div class="col-md-4">
         <div class="card">
+            <div class="card-header">{{trans('base.Latest scans')}}</div>
             <div class="card-body">
                 
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                
-            </div>
-        </div>
-    </div>
+
 </div>
 
 

@@ -11,5 +11,7 @@ return [
     'Rescan' => 'Rescan',
     'Move to list' => 'Move to list',
     'Scan' => 'Scan',
+    'Scan URL' => 'Scan URL',
+    'Latest scans' => 'Latest scans',
 
 ];
