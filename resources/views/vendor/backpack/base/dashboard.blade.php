@@ -68,12 +68,13 @@ $daysstat = GeneralController::statistucsByDate(70);
         <div class="card">
             <div class="card-header">{{trans('base.Scan URL')}}</div>
             <div class="card-body">
-                <form action="" method="post">
+                <form action="{{backpack_url('aj_scan_url')}}" method="post">
+                    @csrf
                     <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                          <button class="btn btn-default" type="button">{{trans('base.Scan')}}</button>
-                        </div>
-                        <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control" name="domain" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                        <div class="input-group-append">
+                            <button class="btn btn-default" type="submit">{{trans('base.Scan')}}</button>
+                          </div>
                       </div>
                 </form>
             </div>
