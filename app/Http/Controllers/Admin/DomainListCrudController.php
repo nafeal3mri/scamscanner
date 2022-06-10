@@ -111,31 +111,31 @@ class DomainListCrudController extends CrudController
                 'page_icon',
                 'description'
             ],
-            'tab' => 'Get Domain data',
+            // 'tab' => 'Get Domain data',
         ]);
         $this->crud->addField([
             'name' => 'main_domain',
             'label'=> 'Host Domain',
             'type' => 'fill_from_parent',
-            'tab' => 'Get Domain data',
+            // 'tab' => 'Get Domain data',
         ]);
         $this->crud->addField([
             'name' => 'page_title',
             'label'=> 'Site name',
             'type' => 'fill_from_parent',
-            'tab' => 'Get Domain data',
+            // 'tab' => 'Get Domain data',
         ]);
         $this->crud->addField([
             'name' => 'page_icon',
             'label'=> 'Site icon',
             'type' => 'fill_from_parent',
-            'tab' => 'Get Domain data',
+            // 'tab' => 'Get Domain data',
         ]);
         $this->crud->addField([
             'name' => 'description',
             'label'=> 'Site Description',
             'type' => 'fill_from_parent',
-            'tab' => 'Get Domain data',
+            // 'tab' => 'Get Domain data',
         ]);
         $this->crud->addField([
                 'name'        => 'type',
@@ -144,7 +144,7 @@ class DomainListCrudController extends CrudController
                 'options'     => ['green' => 'Green', 'yellow' => 'Yellow','red' => 'Red'],
                 'allows_null' => false,
                 'default'     => 'green',
-                'tab' => 'Set Domain position',
+                // 'tab' => 'Set Domain position',
         ]);
         $this->crud->addField([
                 'name'        => 'category',
@@ -153,7 +153,7 @@ class DomainListCrudController extends CrudController
                 'entity' => 'categ', // the method that defines the relationship in your Model
                 'attribute' => "name", // foreign key attribute that is shown to user
                 'model' => "App\Models\DomainCategor", // foreign key model
-                'tab' => 'Set Domain position',
+                // 'tab' => 'Set Domain position',
         ]);
         // ->BelongsTo(DomainCategor::class);
 

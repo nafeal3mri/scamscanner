@@ -8,7 +8,10 @@
         @include('crud::fields.inc.attributes')
     >
     <hr>
-
+    <div class="progress" id="searchprogressbar" style="display: none">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+            style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
     <button type="button" class="btn btn-info" id="buttondataget">get data</button>
     
     {{-- HINT --}}
@@ -34,6 +37,8 @@
     <script>                
         $('#buttondataget').on('click',function(){
             var elements_c = {!! json_encode($field['fill_inputs']) !!}
+            $("#buttondataget").prop("disabled", true);
+            $('#searchprogressbar').show();
             $.ajax({
                 url: '/api/v1/getUrlMeta',
                 type: 'POST', 
@@ -51,11 +56,22 @@
                     elements_c.forEach(element => {
                         $('input[name="'+element+'"]').val(data[element])
                     });
-
+                    $("#buttondataget").prop("disabled", false);
+                    $('#searchprogressbar').hide();
+                    new Noty({
+                            type: 'success',
+                            text: 'Data filled successfuly',
+                        }).show()
                 }, 
                 error: function(error){ 
-                    alert("Cannot get data");
+                    // alert("Cannot get data");
                     console.log(error);
+                    $("#buttondataget").prop("disabled", false);
+                    $('#searchprogressbar').hide();
+                    new Noty({
+                            type: 'danger',
+                            text: 'Cannot get data',
+                        }).show()
                 }
             });
         })

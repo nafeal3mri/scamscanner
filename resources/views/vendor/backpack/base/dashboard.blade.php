@@ -56,10 +56,10 @@ $daysstat = GeneralController::statistucsByDate(70);
                 
                 ",
             ]
-        ]
+],
+
         ]
     ];
-
 @endphp
 
 @section('content')
@@ -68,22 +68,32 @@ $daysstat = GeneralController::statistucsByDate(70);
         <div class="card">
             <div class="card-header">{{trans('base.Scan URL')}}</div>
             <div class="card-body">
-                <form action="{{backpack_url('aj_scan_url')}}" method="post">
+                <form method="post" id="scanurl">
                     @csrf
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="domain" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                        <input type="url" class="form-control" name="domain" id="searchurl" placeholder="" aria-label="" aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button class="btn btn-default" type="submit">{{trans('base.Scan')}}</button>
                           </div>
                       </div>
                 </form>
+
+                <div class="progress" id="searchprogressbar" style="display: none">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+                        style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                        <div class="text-center">
+                            <div id="scanresp"></div>
+                        </div>
+
             </div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">{{trans('base.Latest scans')}}</div>
-            <div class="card-body">
+            <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr class="text-center">
@@ -115,3 +125,53 @@ $daysstat = GeneralController::statistucsByDate(70);
 
 
 @endsection
+
+@push('after_scripts')
+<script>
+    $('#scanurl').on('submit',function(e){
+        e.preventDefault();
+        if( !$('#searchurl').val() ) {
+            new Noty({
+                type: 'danger',
+                text: 'Please enter a valid url',
+            }).show()
+        }else{
+            $("#scanurl input, button").prop("disabled", true);
+            $('#searchprogressbar').show();
+            $('#scanresp').html('');
+        $.ajax({
+                url: "{{backpack_url('aj_scan_url')}}",
+                type: 'POST', 
+                dataType: 'json', 
+                contentType: 'application/json', 
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                // processData: false,
+                data: JSON.stringify({
+                    domain:$('input[name="domain"]').val()
+                }), 
+                success: function (data) {
+                    $('#searchprogressbar').hide();
+                    var htmlresp = '';
+
+                     htmlresp += '<lottie-player src="/scan_icons/'+data['data']['icon']+'.json" background="transparent"  speed="1"  style="width: 100px; height: 100px;" autoplay></lottie-player>';
+                     htmlresp += '<span class="h4">'+data['data']['message']+'</span>';
+                    $('#scanresp').html(htmlresp)
+                    console.log(data);
+                    $("#scanurl input, button").prop("disabled", false);
+                }, 
+                error: function(error){ 
+                    $('#searchprogressbar').hide();
+                        new Noty({
+                            type: 'danger',
+                            text: 'Cannot get data',
+                        }).show()
+                        $("#scanurl input, button").prop("disabled", false);
+                    // console.log(error);
+                }
+            });
+        }
+    })
+</script>
+@endpush

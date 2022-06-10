@@ -15,3 +15,10 @@
   .h-300{
     height: 300px !important;
   }
+  .modal-backdrop {
+    display: none;
+  }
+  
+  .modal {
+    background: rgba(0, 0, 0, 0.5);
+  }

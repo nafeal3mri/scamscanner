@@ -129,7 +129,8 @@ class ReportMistakesCrudController extends CrudController
         if($redirect){
             return redirect(backpack_url('domain-list').'/create?add='.$data['url'])->with('message','Request ignored');
         }else{
-            return redirect()->back()->with('message','Request ignored');
+            // return redirect()->back()->with('message','Request ignored');
+            return   \Alert::add('success', 'Request ignored.')->flash();
         }
     }
 }
