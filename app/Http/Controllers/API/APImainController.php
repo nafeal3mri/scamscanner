@@ -185,7 +185,7 @@ class APImainController extends Controller
             لم تكتشف الأداة أي مؤشر على أن الرابط المدخل هو رابط وهمي، لكن ننصحك بعدم افشاء معلوماتك الخاصة اثناء تصفح الموقع، يمكنك الابلاغ عن نتيجة غير دقيقة وسوف نتابع طلبك
             ';
             $warning_type = 'yellow';
-            $icon_type = 'np-progress-loader';
+            $icon_type = 'no-progress-loader';
         }
         $requestdata->scan_result_color = $warning_type;
         $requestdata->scan_result_msg = $resp_msg;

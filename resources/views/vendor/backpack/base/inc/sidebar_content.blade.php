@@ -1,6 +1,14 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
 <li class="nav-item nav-dropdown">
+    <a class="nav-link nav-dropdown-toggle" href="#"><i class='nav-icon la la-mobile'></i> Scans</a>
+    <ul class="nav-dropdown-items">
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('link-app-request') }}'><i class='nav-icon la la-mobile'></i> Latest scans</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('string-lookup') }}'><i class='nav-icon la la-search'></i> String lookups</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('report-mistakes') }}'><i class='nav-icon la la-bug'></i> Report inaccurate scans</a></li>        
+    </ul>
+</li>
+<li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class='nav-icon la la-search'></i> Domains</a>
     <ul class="nav-dropdown-items">
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('domain-list') }}'><i class='nav-icon la la-link'></i> Domain lists</a></li>
@@ -8,14 +16,7 @@
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('sus-hosts') }}'><i class='nav-icon la la-server'></i> Sus hosts</a></li>
     </ul>
 </li>
-<li class="nav-item nav-dropdown">
-    <a class="nav-link nav-dropdown-toggle" href="#"><i class='nav-icon la la-mobile'></i> App</a>
-    <ul class="nav-dropdown-items">
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('string-lookup') }}'><i class='nav-icon la la-search'></i> String lookups</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('link-app-request') }}'><i class='nav-icon la la-mobile'></i> Link app requests</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('report-mistakes') }}'><i class='nav-icon la la-bug'></i> Report mistakes</a></li>        
-    </ul>
-</li>
+
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class='nav-icon la la-cog'></i> System</a>
     <ul class="nav-dropdown-items">
