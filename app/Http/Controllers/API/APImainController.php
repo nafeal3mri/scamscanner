@@ -58,18 +58,27 @@ class APImainController extends Controller
         ]);
         $requestdata = LinkAppRequest::firstWhere('scan_token',$data['token']);
         if(isset($requestdata)){
-            switch ($requestdata->scan_step) {
-                case 1:
-                    $proccess = $this->getUrlData($requestdata); //check database
-                    break;
-                case 2:
-                    $proccess = $this->checkLinkInfo($requestdata);//chack page content
-                    break;
-                case 3:
-                    $proccess = $this->scanURLWhoIs($data);//check who.is
-                    break;
-                default:
-                    break;
+            try {
+                //code...
+           
+                switch ($requestdata->scan_step) {
+                    case 1:
+                        $proccess = $this->getUrlData($requestdata); //check database
+                        break;
+                    case 2:
+                        $proccess = $this->checkLinkInfo($requestdata);//chack page content
+                        break;
+                    case 3:
+                        $proccess = $this->scanURLWhoIs($data);//check who.is
+                        break;
+                    default:
+                        break;
+                }
+            } catch (\Throwable $th) {
+                $proccess = [
+                    'success' => false,
+                    'message' => "لم نستطع جلب بيانات الموقع، قد يكون الموقع المراد فحصه لا يعمل بالشكل المطلوب"
+                ];
             }
         }else{
             $proccess = [
