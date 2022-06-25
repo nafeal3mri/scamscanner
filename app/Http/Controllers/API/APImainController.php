@@ -402,7 +402,7 @@ class APImainController extends Controller
 
     public function getScanMessages()
     {
-        $scanMsgs = ScanProgressMessages::where('is_enabled',true)->get();
+        $scanMsgs = ScanProgressMessages::where('is_enabled',true)->paginate(10);
         return response()->json($scanMsgs);
     }
 }
