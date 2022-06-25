@@ -10,6 +10,7 @@ use App\Models\LinkAppRequest;
 use App\Models\Newsletters;
 use App\Models\ReportMistakes;
 use App\Models\ScanCond;
+use App\Models\ScanProgressMessages;
 use App\Models\ScanResponseMessages;
 use App\Models\StringLookup;
 use App\Models\SusHosts;
@@ -397,5 +398,11 @@ class APImainController extends Controller
             'description' => $domaindata['description'] ?? '',
             'page_icon' => $domaindata['image'] ?? '',
         ]);
+    }
+
+    public function getScanMessages()
+    {
+        $scanMsgs = ScanProgressMessages::where('is_enabled',true)->get();
+        return response()->json($scanMsgs);
     }
 }
