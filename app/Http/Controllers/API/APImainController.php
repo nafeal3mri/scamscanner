@@ -78,13 +78,23 @@ class APImainController extends Controller
             } catch (\Throwable $th) {
                 $proccess = [
                     'success' => false,
-                    'message' => "لم نستطع جلب بيانات الموقع، قد يكون الموقع المراد فحصه لا يعمل بالشكل المطلوب"
+                    'message' => "لم نستطع جلب بيانات الموقع، قد يكون الموقع المراد فحصه لا يعمل بالشكل المطلوب",
+                    'data' => [
+                        'step' => 3,
+                        'has_next' => false,
+                        'icon' => 'not-found',
+                    ]
                 ];
             }
         }else{
             $proccess = [
                 'success' => false,
-                'message' => "no data available"
+                'message' => "no data available",
+                'data' => [
+                    'step' => 3,
+                    'has_next' => false,
+                    'icon' => 'not-found',
+                ]
             ];
         }
         return $proccess;
