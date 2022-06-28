@@ -49,6 +49,51 @@ class APImainController extends Controller
     ]);
 
     }
+    public function fullScan(Request $data)
+    {
+        sleep(5); 
+        $this->validate($data,[
+            'domain'  => ['required','url'],
+        ],[
+            'domain.required' => __('Please enter a valid url'),
+            'domain.url' => __('Please enter a valid url')
+        ]);
+        try {
+        //step 1
+        $urlcode = Str::random(20);
+        $ln = new LinkAppRequest;
+        $ln->scan_url = $data['domain'];
+        $ln->scan_token = $urlcode;
+        $ln->scan_step = 1;
+        $ln->save();
+        //step 2
+        $proccess = ($this->getUrlData($ln))->getData(); //check database
+            if($proccess->data->has_next){
+                $proccess = $this->checkLinkInfo($ln)->getData();;//chack page content
+                if($proccess->data->has_next){
+                    $proccess = $this->scanURLWhoIs($data);//check who.is
+                    return $proccess;
+                }else{
+                    return $proccess;
+                }
+            }else{
+                return $proccess;
+            }
+
+        } catch (\Throwable $th) {
+            logger($th);
+            $proccess = [
+                'success' => false,
+                'data' => [
+                    'message' => "لم نستطع جلب بيانات الموقع، قد يكون الموقع المراد فحصه لا يعمل بالشكل المطلوب",
+                    'step' => 3,
+                    'has_next' => false,
+                    'icon' => 'not-found',
+                ]
+            ];
+            return $proccess;
+        }
+    }
 
     public function startScannerSteps(Request $data)
     {
@@ -237,14 +282,17 @@ class APImainController extends Controller
         $checkstrings = StringLookup::pluck('lookup_text')->toArray();
         $newlist = array_merge($titels,$checkstrings);
 
-        if($requestdata->page_html != ''){
+        // if($requestdata->page_html != ''){
+            $pagehtml = \Storage::disk('scans')->get($requestdata->scan_token.'.txt');
+        if($pagehtml != ''){
             $textfound = [];
             $in_formtext = [];
             foreach ($newlist as $strlist) {
-                if(str_contains(htmlspecialchars_decode($requestdata->page_html),$strlist)){
+                // if(str_contains(htmlspecialchars_decode($requestdata->page_html),$strlist)){
+                if(str_contains(htmlspecialchars_decode( $pagehtml),$strlist)){
                     $textfound[] = $strlist;
                 }
-                 if (preg_match('#<\s*?form\b[^>]*>(.*?)</form\b[^>]*>#s', htmlspecialchars_decode($requestdata->page_html), $match) == 1) {
+                 if (preg_match('#<\s*?form\b[^>]*>(.*?)</form\b[^>]*>#s', htmlspecialchars_decode( $pagehtml), $match) == 1) {
                     if(str_contains($match[1],$strlist)){
                         $in_formtext[] = $strlist;
                     }
@@ -310,8 +358,9 @@ class APImainController extends Controller
                 
             }
             if($is_app_req && $token != ''){
+                \Storage::disk('scans')->put($token.'.txt' ?? Str::random(20), htmlspecialchars($html));
                 $linkappreq = LinkAppRequest::firstWhere('scan_token',$token);
-                $linkappreq->page_html = htmlspecialchars($html);
+                // $linkappreq->page_html = htmlspecialchars($html);
                 $linkappreq->redirected_url = $redirectedUrl;
                 $linkappreq->save();
             }

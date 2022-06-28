@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')->group(function () {
+    Route::post('scan',[App\Http\Controllers\API\APImainController::class,'fullScan'])->middleware('auth.apikey'); //Scan Url
     Route::post('scanUrl',[App\Http\Controllers\API\APImainController::class,'getUrlData']); //Scan Url
     Route::post('initscan',[App\Http\Controllers\API\APImainController::class,'iniScannerSteps']); //Scan Url
     Route::post('startscan',[App\Http\Controllers\API\APImainController::class,'startScannerSteps']); //Scan Url

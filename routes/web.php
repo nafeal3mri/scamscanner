@@ -19,11 +19,4 @@ use Iodev\Whois\Factory;
 */
 
 Route::get('/', function () {
-    // return view('welcome');
 });
-
-
-// Route::get('/data', function () {
-//     $whois = Factory::get()->createWhois();
-//     return ($whois->loadDomainInfo('aramxonligne.wpengine.com')->whoisServer);
-// });
