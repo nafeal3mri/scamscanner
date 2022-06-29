@@ -32,8 +32,8 @@ class APImainController extends Controller
         $this->validate($data,[
             'domain'  => ['required','url'],
         ],[
-            'domain.required' => __('Please enter a valid url'),
-            'domain.url' => __('Please enter a valid url')
+            'domain.required' => __("base.Please enter a valid url"),
+            'domain.url' => __("base.Please enter a valid url")
         ]);
         $urlcode = Str::random(20);
         $ln = new LinkAppRequest;
@@ -55,8 +55,8 @@ class APImainController extends Controller
         $this->validate($data,[
             'domain'  => ['required','url'],
         ],[
-            'domain.required' => __('Please enter a valid url'),
-            'domain.url' => __('Please enter a valid url')
+            'domain.required' => __("base.Please enter a valid url"),
+            'domain.url' => __("base.Please enter a valid url")
         ]);
         try {
         //step 1
@@ -85,7 +85,7 @@ class APImainController extends Controller
             $proccess = [
                 'success' => false,
                 'data' => [
-                    'message' => "لم نستطع جلب بيانات الموقع، قد يكون الموقع المراد فحصه لا يعمل بالشكل المطلوب",
+                    'message' => __("base.We couldn't access the submited lint, it may not be working properly"),
                     'step' => 3,
                     'has_next' => false,
                     'icon' => 'not-found',
@@ -124,7 +124,7 @@ class APImainController extends Controller
                 $proccess = [
                     'success' => false,
                     'data' => [
-                        'message' => "لم نستطع جلب بيانات الموقع، قد يكون الموقع المراد فحصه لا يعمل بالشكل المطلوب",
+                        'message' => __("base.We couldn't access the submited lint, it may not be working properly"),
                         'step' => 3,
                         'has_next' => false,
                         'icon' => 'not-found',
@@ -208,11 +208,11 @@ class APImainController extends Controller
                     $dataset += [
                         'has_next' =>false,
                         'icon' => 'success',
-                        'message' => 'يمكنك الوثوق بهذا الموقع',
+                        'message' => __("base.You can trust this website"),
                         'share' => true
                     ];
                     $requestdata->scan_result_color = 'green';
-                    $requestdata->scan_result_msg = 'يمكنك الوثوق بهذا الموقع';
+                    $requestdata->scan_result_msg = __("base.You can trust this website");
                     $requestdata->save();
                 }else {
                     $dataset['has_next'] = true;
@@ -237,18 +237,16 @@ class APImainController extends Controller
             if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $maindomain, $regs)) {
                 $sushost = SusHosts::where('host_name',$regs['domain'])->get();
                 if($sushost->count() > 0){
-                    $domainmessage = 'قد يكون هذا الموقع وهمي، تم ارسال معلومات الرابط لتحليله، لا تقم بمشاركة بياناتك اطلاقا';
+                    $domainmessage = __("base.This site may be fake, your scan has been sent to our team to check, please do not share your data at all");
                 }
             }
         }
         if(count($checkform['found_in_form']) > 0){
-            $resp_msg = $domainmessage != '' ? $domainmessage : "نحذر من مشاركة بياناتك الشخصية على هذا الرابط";
+            $resp_msg = $domainmessage != '' ? $domainmessage : __("base.Don't share your sensitive information to this link");
             $warning_type = 'red';
             $icon_type = 'red-warning';
         }else{
-            $resp_msg = $domainmessage != '' ? $domainmessage : '
-            لم تكتشف الأداة أي مؤشر على أن الرابط المدخل هو رابط وهمي، لكن ننصحك بعدم افشاء معلوماتك الخاصة اثناء تصفح الموقع، يمكنك الابلاغ عن نتيجة غير دقيقة وسوف نتابع طلبك
-            ';
+            $resp_msg = $domainmessage != '' ? $domainmessage : __('base.SleemLink did not detect any indication that the entered link is fake, but we advise you not to disclose your private information while browsing, you can report an inaccurate result and we will follow up on your request');
             $warning_type = 'yellow';
             $icon_type = 'empty-state-card';
         }
@@ -403,8 +401,8 @@ class APImainController extends Controller
             // 'scan_code'  => ['required'],
             'scan_result'  => ['required'],
         ],[
-            'domain.required' => __('Please enter a valid url'),
-            'domain.url' => __('Please enter a valid url')
+            'domain.required' => __("base.Please enter a valid url"),
+            'domain.url' => __("base.Please enter a valid url")
         ]);
 
         ReportMistakes::insertOrIgnore([
@@ -447,7 +445,7 @@ class APImainController extends Controller
         $this->validate($data,[
             'domain'  => ['required','url'],
         ],[
-            'domain.required' => __('Please enter a valid url'),
+            'domain.required' => __("base.Please enter a valid url"),
         ]);
         $domaindata = OpenGraph::fetch($data['domain']);
         $main_domain = parse_url($data['domain'])['host'];
