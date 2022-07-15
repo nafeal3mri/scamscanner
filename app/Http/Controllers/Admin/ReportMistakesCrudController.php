@@ -62,7 +62,15 @@ class ReportMistakesCrudController extends CrudController
         // $this->crud->addButtonFromModelFunction('line', 'Reject', 'reject_request');
         $this->crud->addButtonFromView('line', 'move_ignore_btn', 'move_ignore_btn', 'beginning');
         CRUD::column('id');
-        CRUD::column('url_report');
+        // CRUD::column('url_report');
+        $this->crud->addColumn([
+            'type'           => 'custom_html',
+            'name'           => 'url_report',
+            'label'          => 'Reported url',
+            'value' => function($entry) {
+                return '<a href="'.$entry->url_report.'" target="_blank">'.$entry->url_report.'</a>';
+            }
+        ]);
         CRUD::column('scan_id');
         CRUD::column('result');
         CRUD::column('status');
@@ -129,8 +137,9 @@ class ReportMistakesCrudController extends CrudController
         if($redirect){
             return redirect(backpack_url('domain-list').'/create?add='.$data['url'])->with('message','Request ignored');
         }else{
-            // return redirect()->back()->with('message','Request ignored');
-            return   \Alert::add('success', 'Request ignored.')->flash();
+             \Alert::add('success', 'Request ignored.')->flash();
+            return redirect()->back()->with('message','Request ignored');
+
         }
     }
 }

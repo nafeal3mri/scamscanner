@@ -54,12 +54,28 @@ class LinkAppRequestCrudController extends CrudController
         $this->crud->removeButton('update');
         $this->crud->removeButton('delete');
 
-        CRUD::column('id');
-        CRUD::column('scan_url');
+        // CRUD::column('id');
+        // CRUD::column('scan_url');
+        $this->crud->addColumn([
+            'type'           => 'custom_html',
+            'name'           => 'scan_url',
+            'label'          => 'Scan URL',
+            'value' => function($entry) {
+                return '<a href="'.$entry->scan_url.'" target="_blank">'.$entry->scan_url.'</a>';
+            }
+        ]);
         CRUD::column('redirected_url');
         // CRUD::column('scan_token');
         // CRUD::column('scan_step');
         CRUD::column('scan_result_color');
+        $this->crud->addColumn([
+            'type'           => 'custom_html',
+            'name'           => 'created_at',
+            'label'          => 'Scan time',
+            'value' => function($entry) {
+                return  $entry->created_at;
+            }
+        ]);
         $this->crud->addButtonFromView('line', 'recheck_url', 'recheck_url', 'end');
 
         // CRUD::column('created_at');

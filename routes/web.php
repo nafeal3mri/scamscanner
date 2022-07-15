@@ -20,3 +20,4 @@ use Iodev\Whois\Factory;
 
 Route::get('/', function () {
 });
+
