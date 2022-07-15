@@ -68,7 +68,7 @@ class ReportMistakesCrudController extends CrudController
             'name'           => 'url_report',
             'label'          => 'Reported url',
             'value' => function($entry) {
-                return '<a href="'.$entry->url_report.'" target="_blank">'.$entry->url_report.'</a>';
+                return '<a href="'.$entry->url_report.'" target="_blank">'.mb_strimwidth($entry->url_report,0, 20, "...").'</a>';
             }
         ]);
         CRUD::column('scan_id');

@@ -61,7 +61,7 @@ class LinkAppRequestCrudController extends CrudController
             'name'           => 'scan_url',
             'label'          => 'Scan URL',
             'value' => function($entry) {
-                return '<a href="'.$entry->scan_url.'" target="_blank">'.$entry->scan_url.'</a>';
+                return '<a href="'.$entry->scan_url.'" target="_blank">'.mb_strimwidth($entry->scan_url,0, 20, "...").'</a>';
             }
         ]);
         CRUD::column('redirected_url');
