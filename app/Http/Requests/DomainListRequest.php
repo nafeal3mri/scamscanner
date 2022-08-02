@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\DomainCategor;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DomainListRequest extends FormRequest
@@ -26,6 +27,9 @@ class DomainListRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'domain_url' => 'required',
+            'main_domain' => 'required|unique:domain_lists',
+            'category' => 'required'
         ];
     }
 
@@ -36,8 +40,9 @@ class DomainListRequest extends FormRequest
      */
     public function attributes()
     {
+        //
         return [
-            //
+            // 'type' => ,s
         ];
     }
 

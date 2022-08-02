@@ -137,15 +137,7 @@ class DomainListCrudController extends CrudController
             'type' => 'fill_from_parent',
             // 'tab' => 'Get Domain data',
         ]);
-        $this->crud->addField([
-                'name'        => 'type',
-                'label'       => "Color type",
-                'type'        => 'select_from_array',
-                'options'     => ['green' => 'Green', 'yellow' => 'Yellow','red' => 'Red'],
-                'allows_null' => false,
-                'default'     => 'green',
-                // 'tab' => 'Set Domain position',
-        ]);
+
         $this->crud->addField([
                 'name'        => 'category',
                 'label'       => "Category",
@@ -155,6 +147,28 @@ class DomainListCrudController extends CrudController
                 'model' => "App\Models\DomainCategor", // foreign key model
                 // 'tab' => 'Set Domain position',
         ]);
+        $this->crud->addField([
+            'name'        => 'type',
+            'label'       => "Color type",
+            'type'        => 'select_from_array',
+            'options'     => ['green' => 'Green', 'yellow' => 'Yellow','red' => 'Red'],
+            'allows_null' => false,
+            // 'attributes' => [
+            //     'readonly'   => 'readonly',
+            // ],
+            'default'     => 'green',
+            // 'tab' => 'Set Domain position',
+    ]);
+
+    // $this->crud->addField([
+    //     // 'label' => "Domain",
+    //     'name' => 'jquery_selector',
+    //     'type' => 'jquery_selector',
+    //     'fill_from' => 'category',
+    //     'fill_to' => 'type',
+    //     'model_name' => '',
+    // ]);
+        
         // ->BelongsTo(DomainCategor::class);
 
         /**

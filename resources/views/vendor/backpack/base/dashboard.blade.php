@@ -15,6 +15,13 @@ $daysstat = GeneralController::statistucsByDate(70);
             'class' => 'h-250',
             'content' => [
                 'title' => 'Scan count',
+                'has_colors' => true,
+                'colors' => [
+                    '#28a745',
+                    '#dc3544',
+                    '#ffc006',
+                    '#6c757d'
+                ],
                 'data' => [
                     'labels' => $stat['labels'],
                     'numbers' => $stat['values']

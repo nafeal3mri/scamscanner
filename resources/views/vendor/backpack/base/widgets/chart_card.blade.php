@@ -29,6 +29,9 @@ var options = {
     @if($widget['content']['type'] == 'donut' )
     {!! json_encode ($widget['content']['data']['numbers']) ?? [] !!},
     labels: {!! json_encode ($widget['content']['data']['labels']) ?? [] !!},
+    @if(isset($widget['content']['has_colors']) && $widget['content']['has_colors'])
+    colors: {!! json_encode($widget['content']['colors']) !!},
+    @endif
     plotOptions: {
           pie: {
             startAngle: -90,
