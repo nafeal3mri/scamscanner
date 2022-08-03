@@ -229,7 +229,7 @@ class DomainListCrudController extends CrudController
             if($scanmsgs->count() > 0){
                 logger('sendin g notification');
                 OneSignal::sendNotificationUsingTags(
-                    // "Scan report Notification",
+                    "SleemLink",
                     array(
                         ["field" => "tag", "key" => "report", "relation" => "=", "value" => $reportscan->scan_id],
                     ),            
