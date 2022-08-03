@@ -414,7 +414,7 @@ class APImainController extends Controller
         return response()->json(['success' => true, 'data' => [
             'message' => "تم ارسال ملاحظاتكم ... شكرا لكم",
             'step' => 0,
-            // 'report_id' => $report_token
+            'report_id' => $report_token
             ]]);
     }
 
