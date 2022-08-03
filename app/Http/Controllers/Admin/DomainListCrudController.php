@@ -229,13 +229,13 @@ class DomainListCrudController extends CrudController
             if($scanmsgs->count() > 0){
                 logger('sendin g notification');
                 OneSignal::sendNotificationUsingTags(
-                    "SleemLink",
+                    "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message,
                     array(
                         ["field" => "tag", "key" => "report", "relation" => "=", "value" => $reportscan->scan_id],
                     ),            
                     null, null, null, null, 
                     "نتيجة فحص سليم لنك للرابط المرسل", 
-                    "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message
+                    // "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message
                 );
             }
 
