@@ -169,7 +169,7 @@ class DomainListCrudController extends CrudController
         $this->crud->addField([
             'name'        => 'report_token',
             // 'label'       => "report_token",
-            'type'        => 'text',
+            'type'        => 'hidden',
             'value'       => isset($_GET['reportID']) ? $_GET['reportID'] : ''
             // 'attributes' => [
             //     'readonly'   => 'readonly',
