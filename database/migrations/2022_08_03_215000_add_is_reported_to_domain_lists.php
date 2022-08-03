@@ -15,7 +15,7 @@ class AddIsReportedToDomainLists extends Migration
     {
         Schema::table('domain_lists', function (Blueprint $table) {
             // $table->boolean('is_reported')->default(false)->after('add_by');
-            $table->string('report_token')->nullable()->after('is_reported');
+            $table->string('report_token')->nullable()->after('add_by');
         });
     }
 
