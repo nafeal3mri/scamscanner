@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\DomainListRequest;
 use App\Models\DomainCategor;
 use App\Models\ReportMistakes;
+use App\Models\ScanResponseMessages;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\CRUD\app\Library\Widget;
+use OneSignal;
 
 /**
  * Class DomainListCrudController
@@ -163,11 +165,11 @@ class DomainListCrudController extends CrudController
             'default'     => 'green',
             // 'tab' => 'Set Domain position',
     ]);
-    if(isset($_GET['reportID'])){
+    // if(isset($_GET['reportID'])){
         $this->crud->addField([
-            'name'        => 'reportID',
-            'label'       => "reportID",
-            'type'        => 'hidden',
+            'name'        => 'report_token',
+            // 'label'       => "report_token",
+            'type'        => 'text',
             'value'       => isset($_GET['reportID']) ? $_GET['reportID'] : ''
             // 'attributes' => [
             //     'readonly'   => 'readonly',
@@ -175,7 +177,7 @@ class DomainListCrudController extends CrudController
         ]);
 
         
-    }
+    // }
 
 
     // $this->crud->addField([
@@ -209,9 +211,13 @@ class DomainListCrudController extends CrudController
 
     public function store()
     {
-        if($this->data['entry']->reportID != ''){
+        $response = $this->traitStore();
+        // dd($this->data['entry']->category);
+        if($this->data['entry']->report_token != ''){
             // ReportMistakes::where('id',$this->data['entry']->id)->update(['status'=>'move_to_list']);
-            $reportscan = ReportMistakes::where('id',$this->data['entry']->id);
+            $reportscan = ReportMistakes::find($this->data['entry']->report_token);
+            $getcateg = DomainCategor::find($this->data['entry']->category)->get()->first();
+            $scanmsgs = ScanResponseMessages::where(['scan_type' => 'category', 'called_from' => $getcateg->name])->get();
             
             // OneSignal::sendNotificationToAll(
             //     '', 
@@ -220,22 +226,23 @@ class DomainListCrudController extends CrudController
             //     $buttons = null, 
             //     $schedule = null
             // );
-            OneSignal::sendNotificationToSegment(
-                "Scan report Notification",
-                [
-                    'tag'=>[
-                        'report' => $reportscan->scan_id
-                    ]
-                ], 
-                null, null, null, null, 
-                "نتيجة فحص سليم لنك للرابط المرسل", 
-                "Custom subtitle"
-            );
+            if($scanmsgs->count() > 0){
+                logger('sendin g notification');
+                OneSignal::sendNotificationUsingTags(
+                    "Scan report Notification",
+                    array(
+                        ["field" => "tag", "key" => "report", "relation" => "=", "value" => $reportscan->scan_id],
+                    ),            
+                    null, null, null, null, 
+                    "نتيجة فحص سليم لنك للرابط المرسل", 
+                    "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message
+                );
+            }
 
-            $reportscan->status = 'move_to_list';
+            $reportscan->status = 'moved_to_list';
             $reportscan->save();
         }
-        $response = $this->traitStore();
+       
         // dd($response);
         return $response;
     }

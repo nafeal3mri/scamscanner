@@ -29,7 +29,8 @@ class DomainListRequest extends FormRequest
             // 'name' => 'required|min:5|max:255'
             'domain_url' => 'required',
             'main_domain' => 'required|unique:domain_lists',
-            'category' => 'required'
+            'category' => 'required',
+            'report_token' => 'required'
         ];
     }
 

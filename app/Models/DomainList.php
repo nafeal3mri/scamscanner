@@ -17,7 +17,8 @@ class DomainList extends Model
         'category',
         'page_title',
         'page_icon',
-        'description'
+        'description',
+        'report_token'
     ];
 
     public function categ()
