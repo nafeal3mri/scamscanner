@@ -131,11 +131,11 @@ class ReportMistakesCrudController extends CrudController
         }elseif($data['type'] == 'ignore'){
             $newststus = 'ignored';
             $redirect = false;
+            ReportMistakes::where('id',$data['id'])->update(['status'=>$newststus]);
         }
-        ReportMistakes::where('id',$data['id'])->update(['status'=>$newststus]);
 
         if($redirect){
-            return redirect(backpack_url('domain-list').'/create?add='.$data['url'])->with('message','Request ignored');
+            return redirect(backpack_url('domain-list').'/create?add='.$data['url'].'&reportID='.$data['id'])->with('message','Request ignored');
         }else{
              \Alert::add('success', 'Request ignored.')->flash();
             return redirect()->back()->with('message','Request ignored');

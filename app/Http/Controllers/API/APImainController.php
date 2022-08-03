@@ -404,11 +404,11 @@ class APImainController extends Controller
             'domain.required' => __("base.Please enter a valid url"),
             'domain.url' => __("base.Please enter a valid url")
         ]);
-        // $report_token = Str::random(15);
+        $report_token = Str::random(15);
         ReportMistakes::insertOrIgnore([
             'url_report' => $data['domain'],
             'result' => $data['scan_result'],
-            'scan_id' => $data['scan_code']
+            'scan_id' => $report_token
         ]);
 
         return response()->json(['success' => true, 'data' => [

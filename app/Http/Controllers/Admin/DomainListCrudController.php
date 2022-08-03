@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\DomainListRequest;
 use App\Models\DomainCategor;
+use App\Models\ReportMistakes;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\CRUD\app\Library\Widget;
@@ -15,11 +16,14 @@ use Backpack\CRUD\app\Library\Widget;
  */
 class DomainListCrudController extends CrudController
 {
+
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -159,6 +163,20 @@ class DomainListCrudController extends CrudController
             'default'     => 'green',
             // 'tab' => 'Set Domain position',
     ]);
+    if(isset($_GET['reportID'])){
+        $this->crud->addField([
+            'name'        => 'reportID',
+            'label'       => "reportID",
+            'type'        => 'hidden',
+            'value'       => isset($_GET['reportID']) ? $_GET['reportID'] : ''
+            // 'attributes' => [
+            //     'readonly'   => 'readonly',
+            // ],
+        ]);
+
+        
+    }
+
 
     // $this->crud->addField([
     //     // 'label' => "Domain",
@@ -187,5 +205,38 @@ class DomainListCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function store()
+    {
+        if($this->data['entry']->reportID != ''){
+            // ReportMistakes::where('id',$this->data['entry']->id)->update(['status'=>'move_to_list']);
+            $reportscan = ReportMistakes::where('id',$this->data['entry']->id);
+            
+            // OneSignal::sendNotificationToAll(
+            //     '', 
+            //     $url = null, 
+            //     $data = ['post_id'=>$get_newsletter->id], 
+            //     $buttons = null, 
+            //     $schedule = null
+            // );
+            OneSignal::sendNotificationToSegment(
+                "Scan report Notification",
+                [
+                    'tag'=>[
+                        'report' => $reportscan->scan_id
+                    ]
+                ], 
+                null, null, null, null, 
+                "نتيجة فحص سليم لنك للرابط المرسل", 
+                "Custom subtitle"
+            );
+
+            $reportscan->status = 'move_to_list';
+            $reportscan->save();
+        }
+        $response = $this->traitStore();
+        // dd($response);
+        return $response;
     }
 }
