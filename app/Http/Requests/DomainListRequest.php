@@ -30,7 +30,7 @@ class DomainListRequest extends FormRequest
             'domain_url' => 'required',
             'main_domain' => 'required|unique:domain_lists',
             'category' => 'required',
-            'report_token' => 'required'
+            // 'report_token' => 'required'
         ];
     }
 
