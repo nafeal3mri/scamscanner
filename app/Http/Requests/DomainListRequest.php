@@ -29,7 +29,7 @@ class DomainListRequest extends FormRequest
         return [
             // 'name' => 'required|min:5|max:255'
             'domain_url' => 'required',
-            'main_domain' => 'required|unique:domain_lists,main_domain'.$domainid,
+            'main_domain' => 'required|unique:domain_lists'.$domainid,
             'category' => 'required',
             // 'report_token' => 'required'
         ];
