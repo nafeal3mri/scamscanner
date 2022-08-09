@@ -28,7 +28,7 @@ class DomainListRequest extends FormRequest
         return [
             // 'name' => 'required|min:5|max:255'
             'domain_url' => 'required',
-            'main_domain' => 'required|unique:domain_lists',
+            'main_domain' => 'required|unique:domain_lists,main_domain'.$this->domain_lists->id,
             'category' => 'required',
             // 'report_token' => 'required'
         ];
