@@ -25,14 +25,19 @@ class DomainListRequest extends FormRequest
      */
     public function rules()
     {
-        // $domainid = \Request::segments()[1];
-        return [
-            // 'name' => 'required|min:5|max:255'
-            'domain_url' => 'required',
-            'main_domain' => 'required|unique:domain_lists',
-            'category' => 'required',
-            // 'report_token' => 'required'
-        ];
+        $domainvalid = 'required|unique:domain_lists';
+        if( count( \Request::segments() ) > 2 ) {
+            $domainid = \Request::segments()[2];
+            $domainvalid = 'required|unique:domain_lists,id,'.$domainid;
+        }
+            return [
+                // 'name' => 'required|min:5|max:255'
+                'domain_url' => 'required',
+                'main_domain' => $domainvalid,
+                'category' => 'required',
+                // 'report_token' => 'required'
+            ];
+        
     }
 
     /**
