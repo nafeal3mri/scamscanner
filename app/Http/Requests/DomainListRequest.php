@@ -25,11 +25,11 @@ class DomainListRequest extends FormRequest
      */
     public function rules()
     {
-        $domainid = \Request::segments()[1];
+        // $domainid = \Request::segments()[1];
         return [
             // 'name' => 'required|min:5|max:255'
             'domain_url' => 'required',
-            'main_domain' => 'required|unique:domain_lists'.$domainid,
+            'main_domain' => 'required|unique:domain_lists',
             'category' => 'required',
             // 'report_token' => 'required'
         ];
