@@ -11,7 +11,7 @@
         "berkayk/onesignal-laravel": "^1.0",
         "ejarnutowski/laravel-api-key": "^1.0",
         "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.4.5",
+        "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
         "io-developer/php-whois": "^4.1",
         "jeremykendall/php-domain-parser": "^5.7",
