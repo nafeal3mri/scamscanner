@@ -107,7 +107,7 @@ class DomainListCrudController extends CrudController
         // CRUD::field('updated_at');
         $domainreport = '';
         if(isset($_GET['reportID'])){
-            $domainr = ReportMistakes::find($_GET['reportID'])->get();
+            $domainr = ReportMistakes::where('id',$_GET['reportID'])->get();
             if($domainr->count() > 0){
                 $domainreport = $domainr->first()->url_report;
             }
