@@ -51,9 +51,10 @@ class DomainCategorCrudController extends CrudController
         )->to('before_content');
         CRUD::column('id');
         CRUD::column('name');
+        CRUD::column('type');
         CRUD::column('description');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
+        // CRUD::column('created_at');
+        // CRUD::column('updated_at');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -80,6 +81,14 @@ class DomainCategorCrudController extends CrudController
         $this->crud->addField(
             ['name' => 'name', 'type' => 'text']
         );
+        $this->crud->addField([
+            'name'        => 'type',
+            'label'       => "Color type",
+            'type'        => 'select_from_array',
+            'options'     => ['green' => 'Green', 'yellow' => 'Yellow','red' => 'Red'],
+            'allows_null' => false,
+            'default'     => 'green',
+        ]);
         $this->crud->addField(
             ['name' => 'description', 'type' => 'textarea']
         );

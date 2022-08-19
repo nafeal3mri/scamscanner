@@ -147,24 +147,37 @@ class DomainListCrudController extends CrudController
         $this->crud->addField([
                 'name'        => 'category',
                 'label'       => "Category",
-                'type'        => 'select',
-                'entity' => 'categ', // the method that defines the relationship in your Model
-                'attribute' => "name", // foreign key attribute that is shown to user
-                'model' => "App\Models\DomainCategor", // foreign key model
+                // 'type'        => 'select',
+                // 'entity' => 'categ', // the method that defines the relationship in your Model
+                // 'attribute' => "name", // foreign key attribute that is shown to user
+                // 'model' => "App\Models\DomainCategor", // foreign key model
                 // 'tab' => 'Set Domain position',
+                'type' => 'depend_selector_parent',
+                'values' => DomainCategor::select('id','name','type')->get(),
+                'text_val' => 'name',
+                'value_val' => 'id',
+                'depend_on_input' => 'type',
+                'depend_on_val' => 'type'
         ]);
         $this->crud->addField([
             'name'        => 'type',
             'label'       => "Color type",
-            'type'        => 'select_from_array',
-            'options'     => ['green' => 'Green', 'yellow' => 'Yellow','red' => 'Red'],
-            'allows_null' => false,
-            // 'attributes' => [
-            //     'readonly'   => 'readonly',
-            // ],
-            'default'     => 'green',
-            // 'tab' => 'Set Domain position',
-    ]);
+            'type' => 'depend_selector',
+            'selector_type' => 'readonly_text',
+            'd_parent_name' => 'category'
+        ]);
+    //     $this->crud->addField([
+    //         'name'        => 'type',
+    //         'label'       => "Color type",
+    //         'type'        => 'select_from_array',
+    //         'options'     => ['green' => 'Green', 'yellow' => 'Yellow','red' => 'Red'],
+    //         'allows_null' => false,
+    //         // 'attributes' => [
+    //         //     'readonly'   => 'readonly',
+    //         // ],
+    //         'default'     => 'green',
+    //         // 'tab' => 'Set Domain position',
+    // ]);
     // if(isset($_GET['reportID'])){
         $this->crud->addField([
             'name'        => 'report_token',

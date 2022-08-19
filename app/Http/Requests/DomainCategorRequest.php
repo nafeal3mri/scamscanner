@@ -26,6 +26,7 @@ class DomainCategorRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'type' => 'required',
         ];
     }
 
