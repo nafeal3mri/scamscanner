@@ -52,7 +52,7 @@ class DomainListCrudController extends CrudController
                 'type' => 'card',
                 'content'    => [
                     'header' => 'Total Domains', // optional
-                    'body'   => $this->crud->count(),
+                    'body'   => $this->crud->count(), 
                 ]
              ],
         )->to('before_content');
