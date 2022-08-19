@@ -129,7 +129,7 @@ class ReportMistakesCrudController extends CrudController
             $newststus = 'moved_to_list';
             $redirect = true;
         }elseif($data['type'] == 'ignore'){
-            $newststus = 'ignored';
+            $newststus = 'ignored'; 
             $redirect = false;
             ReportMistakes::where('id',$data['id'])->update(['status'=>$newststus]);
         }

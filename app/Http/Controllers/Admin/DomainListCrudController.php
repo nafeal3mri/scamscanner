@@ -249,7 +249,7 @@ class DomainListCrudController extends CrudController
             // );
             if($scanmsgs->count() > 0){
                 logger('sendin g notification');
-                OneSignal::sendNotificationUsingTags( 
+                OneSignal::sendNotificationUsingTags(
                     "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message,
                     array(
                         ["field" => "tag", "key" => "report", "relation" => "=", "value" => $reportscan->first()->scan_id],
