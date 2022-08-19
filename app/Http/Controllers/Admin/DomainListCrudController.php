@@ -236,9 +236,9 @@ class DomainListCrudController extends CrudController
         // dd($this->data['entry']->category);
         if($this->data['entry']->report_token != ''){
             // ReportMistakes::where('id',$this->data['entry']->id)->update(['status'=>'move_to_list']);
-            $reportscan = ReportMistakes::find($this->data['entry']->report_token);
-            $getcateg = DomainCategor::find($this->data['entry']->category)->get()->first();
-            $scanmsgs = ScanResponseMessages::where(['scan_type' => 'category', 'called_from' => $getcateg->name])->get();
+            $reportscan = ReportMistakes::where('id',$this->data['entry']->report_token);
+            $getcateg = DomainCategor::where('id',$this->data['entry']->category)->get();
+            $scanmsgs = ScanResponseMessages::where(['scan_type' => 'category', 'called_from' => $getcateg->first()->name])->get();
             
             // OneSignal::sendNotificationToAll(
             //     '', 
