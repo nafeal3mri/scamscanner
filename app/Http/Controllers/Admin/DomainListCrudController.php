@@ -236,7 +236,7 @@ class DomainListCrudController extends CrudController
         // dd($this->data['entry']->category);
         if($this->data['entry']->report_token != ''){
             // ReportMistakes::where('id',$this->data['entry']->id)->update(['status'=>'move_to_list']);
-            $reportscan = ReportMistakes::where('id',$this->data['entry']->report_token);
+            $reportscan = ReportMistakes::where('id',$this->data['entry']->report_token)->get();
             $getcateg = DomainCategor::where('id',$this->data['entry']->category)->get();
             $scanmsgs = ScanResponseMessages::where(['scan_type' => 'category', 'called_from' => $getcateg->first()->name])->get();
             
@@ -252,7 +252,7 @@ class DomainListCrudController extends CrudController
                 OneSignal::sendNotificationUsingTags(
                     "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message,
                     array(
-                        ["field" => "tag", "key" => "report", "relation" => "=", "value" => $reportscan->scan_id],
+                        ["field" => "tag", "key" => "report", "relation" => "=", "value" => $reportscan->first()->scan_id],
                     ),            
                     null, null, null, null, 
                     "نتيجة فحص سليم لنك للرابط المرسل", 
