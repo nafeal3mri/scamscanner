@@ -359,7 +359,7 @@ class APImainController extends Controller
                 \Storage::disk('scans')->put($token.'.txt' ?? Str::random(20), htmlspecialchars($html));
                 $linkappreq = LinkAppRequest::firstWhere('scan_token',$token);
                 // $linkappreq->page_html = htmlspecialchars($html);
-                $linkappreq->redirected_url = $redirectedUrl;
+                $linkappreq->redirected_url = $redirectedUrl == '' ? $url : $redirectedUrl;
                 $linkappreq->save();
             }
 
