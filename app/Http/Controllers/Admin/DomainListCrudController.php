@@ -105,12 +105,20 @@ class DomainListCrudController extends CrudController
         // CRUD::field('add_by');
         // CRUD::field('created_at');
         // CRUD::field('updated_at');
-
+        $domainreport = '';
+        if(isset($_GET['reportID'])){
+            $domainr = ReportMistakes::find($_GET['reportID'])->get();
+            if($domainr->count() > 0){
+                $domainreport = $domainr->first()->url_report;
+            }
+        }
+        
         $this->crud->addField([
             'label' => "Domain",
             'name' => 'domain_url',
             'type' => 'domain_url',
             'inputs_count' => 4,
+            'default' => $domainreport,
             'fill_inputs' => [
                 'main_domain',
                 'page_title',
