@@ -130,7 +130,10 @@ class NewslettersCrudController extends CrudController
                 'type'  => 'summernote',
                 'options' => [
                     'toolbar' => [
-                        ['font', ['bold', 'underline', 'italic']]
+                        ['font', ['bold', 'underline', 'italic']],
+                        ['style', ['style']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['view', ['fullscreen', 'codeview', 'help']]
                     ]
                 ],
             ],

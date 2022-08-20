@@ -41,8 +41,8 @@ class APImainController extends Controller
             $ln->scan_url = $data['domain'];
             $ln->scan_token = $urlcode;
             $ln->scan_step = 1;
-            $ln->useragent = $data->header('user-agent') ?? ''; 
-            $ln->userip = request()->ip();
+            // $ln->useragent = $data->header('user-agent') ?? ''; 
+            // $ln->userip = request()->ip();
             $ln->save();
         // ]);
 
