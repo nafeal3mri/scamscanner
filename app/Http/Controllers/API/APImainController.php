@@ -365,7 +365,7 @@ class APImainController extends Controller
                 $linkappreq->save();
             }
 
-            return $redirectedUrl; 
+            return $redirectedUrl == '' ? $url : $redirectedUrl; 
 
 
     }
