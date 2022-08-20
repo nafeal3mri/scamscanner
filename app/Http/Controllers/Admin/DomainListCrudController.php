@@ -247,6 +247,7 @@ class DomainListCrudController extends CrudController
             //     $buttons = null, 
             //     $schedule = null
             // );
+            if(isset($reportscan->scan_id)){
             if($scanmsgs->count() > 0){
                 logger('sending notification to:'.$reportscan->scan_id);
                 OneSignal::sendNotificationUsingTags(
@@ -258,6 +259,7 @@ class DomainListCrudController extends CrudController
                     "نتيجة فحص سليم لنك للرابط المرسل", 
                     // "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message
                 );
+            }
             }
 
             $reportscan->status = 'moved_to_list';
