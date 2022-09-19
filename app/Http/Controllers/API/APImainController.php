@@ -180,7 +180,7 @@ class APImainController extends Controller
                     'domain' => $domainres,
                 ];
                 $check_url = DomainList::with('categ')
-                    ->where('main_domain', $finalurl ?? $domainres['main_domain'])
+                    ->where('main_domain', $domainres['main_domain'])
                     ->orWhere('main_domain', $domainres['domain'] ?? $domainres['main_domain'])
                     ->get();
                 if($check_url->count() > 0){
