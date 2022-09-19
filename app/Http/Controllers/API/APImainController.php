@@ -28,7 +28,7 @@ class APImainController extends Controller
 {
     public function iniScannerSteps(Request $data)
     {
-        sleep(5); 
+        sleep(2); 
         $this->validate($data,[
             'domain'  => ['required','url'],
         ],[
@@ -53,7 +53,7 @@ class APImainController extends Controller
     }
     public function fullScan(Request $data)
     {
-        sleep(5); 
+        sleep(2); 
         $this->validate($data,[
             'domain'  => ['required','url'],
         ],[
@@ -171,7 +171,8 @@ class APImainController extends Controller
     {
         if(isset($requestdata)){
             $finalurl = $this->finalredirecturl($requestdata->scan_url,true,$requestdata->scan_token);
-            $domainres = $this->cleardomainname($requestdata->scan_url);
+            $domainres = $this->cleardomainname($finalurl ?? $requestdata->scan_url);
+            // logger($finalurl);
                 $resp = true;
                 $dataset = [
                     'posted_link' => $requestdata->scan_url,
@@ -179,7 +180,7 @@ class APImainController extends Controller
                     'domain' => $domainres,
                 ];
                 $check_url = DomainList::with('categ')
-                    ->where('main_domain', $domainres['main_domain'])
+                    ->where('main_domain', $finalurl ?? $domainres['main_domain'])
                     ->orWhere('main_domain', $domainres['domain'] ?? $domainres['main_domain'])
                     ->get();
                 if($check_url->count() > 0){
