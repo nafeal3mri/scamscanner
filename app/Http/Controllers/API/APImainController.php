@@ -171,7 +171,7 @@ class APImainController extends Controller
     {
         if(isset($requestdata)){
             $finalurl = $this->finalredirecturl($requestdata->scan_url,true,$requestdata->scan_token);
-            $domainres = $this->cleardomainname($finalurl ?? $requestdata->scan_url);
+            $domainres = $this->cleardomainname($finalurl  ?? $requestdata->scan_url); 
             // logger($finalurl);
                 $resp = true;
                 $dataset = [
