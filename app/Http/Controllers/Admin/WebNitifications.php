@@ -30,7 +30,7 @@ class WebNitifications extends Controller
             'included_segments' => array('All'),
             // 'data' => array("foo" => "bar"),
             // 'large_icon' =>"ic_launcher_round.png",
-            'contents' => $message
+            'contents' => ['en' => $message]
         );
     
         $fields = json_encode($fields);
