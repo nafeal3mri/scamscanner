@@ -36,7 +36,7 @@ return [
         // "ar_MA" => "Arabic (Morocco)",
         // "ar_OM" => "Arabic (Oman)",
         // "ar_QA" => "Arabic (Qatar)",
-        // "ar_SA" => "Arabic (Saudi Arabia)",
+        "ar_SA" => "Arabic (Saudi Arabia)",
         // "ar_SD" => "Arabic (Sudan)",
         // "ar_SY" => "Arabic (Syria)",
         // "ar_TN" => "Arabic (Tunisia)",

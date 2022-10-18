@@ -180,5 +180,15 @@ $daysstat = GeneralController::statistucsByDate(70);
             });
         }
     })
+window.OneSignal = window.OneSignal || [];
+  OneSignal.push(function() {
+    OneSignal.init({
+      appId: "8a5938fc-9e9a-468d-a141-064b77b3417e",
+      safari_web_id: "web.onesignal.auto.1b5e3a9a-fd8d-4cbc-b150-cc0a98b0f0fe",
+      notifyButton: {
+        enable: true,
+      },
+    });
+});
 </script>
 @endpush
