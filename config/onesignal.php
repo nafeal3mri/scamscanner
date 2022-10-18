@@ -30,4 +30,7 @@ return array(
 	|
 	*/
     'guzzle_client_timeout' => env('ONESIGNAL_GUZZLE_CLIENT_TIMEOUT', 0),
+
+	'dashboard_app_id' => env('ADMIN_ONESIGNAL_APP_ID'),
+	'dashboard_API_key' => env('ADMIN_ONESIGNAL_REST_API_KEY'),
 );
