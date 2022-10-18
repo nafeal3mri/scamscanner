@@ -13,10 +13,10 @@ class WebNitifications extends Controller
     {
         $scans = LinkAppRequest::where('created_at','>=',Carbon::now()->subHour())->get()->count();
         logger('send new notification');
-        // if($scans > 0){
+        if($scans > 0){
             $notifyresp = $this->sendNotifyCURL('لديك عدد '.$scans.' عملية فحص جديدة في الساعة الماضية','عمليات فحص جديدة');
             logger($notifyresp);
-        // }
+        }
         
     }
 

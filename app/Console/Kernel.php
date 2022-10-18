@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             $notify = new WebNitifications();
             $notify->notifyNewScans();
-        })->everyMinute();
+        })->hourly();
     }
 
     /**
