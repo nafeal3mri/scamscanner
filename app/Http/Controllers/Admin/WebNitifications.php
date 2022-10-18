@@ -4,14 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\LinkAppRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class WebNitifications extends Controller
 {
     public function notifyNewScans()
     {
-        // $scans = LinkAppRequest::where();
-        $this->sendNotifyCURL('اهلا وسهلا بك','رسالة جديدة');
+        $scans = LinkAppRequest::where('','>=',Carbon::now()->subHour())->get()->count();
+        logger('send new notification');
+        // if($scans > 0){
+            $this->sendNotifyCURL('لديك عدد '.$scans.' عملية فحص جديدة في الساعة الماضية','عمليات فحص جديدة');
+        // }
+        
     }
 
     public function sendNotifyCURL($message,$title)
