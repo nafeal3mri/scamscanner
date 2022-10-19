@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Admin\WebNitifications;
 use App\Http\Controllers\Controller;
 use App\Models\DomainCategor;
 use App\Models\DomainList;
@@ -413,12 +414,18 @@ class APImainController extends Controller
             'result' => $data['scan_result'],
             'scan_id' => $report_token
         ]);
-
+        try {
+            $notify = new WebNitifications();
+            $notify->sendNotifyCURL('يوجد بلاغ جديد عن نتيجة فحص خاطئة','بلاغ جديد');
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         return response()->json(['success' => true, 'data' => [
             'message' => "تم ارسال ملاحظاتكم ... شكرا لكم",
             'step' => 0,
             'report_id' => $report_token
             ]]);
+        
     }
 
     public function Newsletters($pagenum = 1)
