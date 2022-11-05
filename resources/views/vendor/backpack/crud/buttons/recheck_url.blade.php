@@ -1,6 +1,5 @@
 ﻿@if ($crud->hasAccess('update'))
 
-
     <form action="{{backpack_url('send_newsletter_notification')}}" method="POST" style="display: inline;">
         @csrf
         <input type="hidden" name="id_n" value="{{$entry->scan_token}}">

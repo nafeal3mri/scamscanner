@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\DomainListRequest;
 use App\Models\DomainCategor;
+use App\Models\LinkAppRequest;
 use App\Models\ReportMistakes;
 use App\Models\ScanResponseMessages;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -110,6 +111,9 @@ class DomainListCrudController extends CrudController
             $domainr = ReportMistakes::where('id',$_GET['reportID'])->get();
             if($domainr->count() > 0){
                 $domainreport = $domainr->first()->url_report;
+            }else{
+                $domainr = LinkAppRequest::where('id',$_GET['reportID'])->get();
+                $domainreport = $domainr->first()->scan_url;
             }
         }
         
@@ -233,40 +237,31 @@ class DomainListCrudController extends CrudController
     public function store()
     {
         $response = $this->traitStore();
-        // dd($this->data['entry']->category);
         if($this->data['entry']->report_token != ''){
-            // ReportMistakes::where('id',$this->data['entry']->id)->update(['status'=>'move_to_list']);
             $reportscan = ReportMistakes::find($this->data['entry']->report_token);
             $getcateg = DomainCategor::where('id',$this->data['entry']->category)->get();
-            $scanmsgs = ScanResponseMessages::where(['scan_type' => 'category', 'called_from' => $getcateg->first()->name])->get();
-            
-            // OneSignal::sendNotificationToAll(
-            //     '', 
-            //     $url = null, 
-            //     $data = ['post_id'=>$get_newsletter->id], 
-            //     $buttons = null, 
-            //     $schedule = null
-            // );
-            if(isset($reportscan->scan_id)){
-            if($scanmsgs->count() > 0){
-                logger('sending notification to:'.$reportscan->scan_id);
-                OneSignal::sendNotificationUsingTags(
-                    "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message,
-                    array(
-                        ["field" => "tag", "key" => "report", "relation" => "=", "value" => $reportscan->scan_id],
-                    ),            
-                    null, null, null, null, 
-                    "نتيجة فحص سليم لنك للرابط المرسل", 
-                    // "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message
-                );
-            }
-            }
+            if($getcateg->count() > 0){
+                $scanmsgs = ScanResponseMessages::where(['scan_type' => 'category', 'called_from' => $getcateg->first()->name])->get();
+                if(isset($reportscan->scan_id)){
+                    if($scanmsgs->count() > 0){
+                        logger('sending notification to:'.$reportscan->scan_id);
+                        OneSignal::sendNotificationUsingTags(
+                            "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message,
+                            array(
+                                ["field" => "tag", "key" => "report", "relation" => "=", "value" => $reportscan->scan_id],
+                            ),
+                            null, null, null, null, 
+                            "نتيجة فحص سليم لنك للرابط المرسل", 
+                        );
+                    }
+                    $reportscan->status = 'moved_to_list';
+                    $reportscan->save();
+                }
 
-            $reportscan->status = 'moved_to_list';
-            $reportscan->save();
+                
+            }
         }
        
-        // dd($response);
         return $response;
     }
 }

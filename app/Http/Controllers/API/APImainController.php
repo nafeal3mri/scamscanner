@@ -343,6 +343,7 @@ class APImainController extends Controller
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+            curl_setopt($ch, CURLOPT_USERAGENT, $this->getUseragent());
             curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,TRUE);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 12); 
             curl_setopt($ch, CURLOPT_TIMEOUT, 9); //timeout in seconds
@@ -392,6 +393,7 @@ class APImainController extends Controller
         $ch = curl_init($data['domain']);
         curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);    
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->getUseragent());
         curl_exec($ch);
         $code = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
         curl_close($ch);
@@ -473,5 +475,18 @@ class APImainController extends Controller
     {
         $scanMsgs = ScanProgressMessages::where('is_enabled',true)->paginate(10);
         return response()->json($scanMsgs);
+    }
+
+    public function getUseragent()
+    {
+        $ua = [
+            'Mozilla/5.0 (Linux; Android 12; SM-S906N Build/QP1A.190711.020; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.119 Mobile Safari/537.36',
+            'Mozilla/5.0 (Linux; Android 10; SM-G996U Build/QP1A.190711.020; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36',
+            'Mozilla/5.0 (Linux; Android 5.1.1; SM-G928X Build/LMY47X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.83 Mobile Safari/537.36',
+            'Mozilla/5.0 (Linux; Android 7.1.1; G8231 Build/41.2.A.0.219; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/59.0.3071.125 Mobile Safari/537.36',
+            'Mozilla/5.0 (iPhone14,3; U; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/19A346 Safari/602.1',
+            'Mozilla/5.0 (iPhone12,1; U; CPU iPhone OS 13_0 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/15E148 Safari/602.1'
+        ];
+        return $ua[array_rand($ua)];
     }
 }
