@@ -242,23 +242,20 @@ class DomainListCrudController extends CrudController
             $getcateg = DomainCategor::where('id',$this->data['entry']->category)->get();
             if($getcateg->count() > 0){
                 $scanmsgs = ScanResponseMessages::where(['scan_type' => 'category', 'called_from' => $getcateg->first()->name])->get();
+                if($scanmsgs->count() > 0){
+                    OneSignal::sendNotificationUsingTags(
+                        "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message,
+                        array(
+                            ["field" => "tag", "key" => "report", "relation" => "=", "value" => $this->data['entry']->report_token],
+                        ),
+                        null, null, null, null, 
+                        "نتيجة فحص سليم لنك للرابط المرسل", 
+                    );
+                }
                 if(isset($reportscan->scan_id)){
-                    if($scanmsgs->count() > 0){
-                        logger('sending notification to:'.$reportscan->scan_id);
-                        OneSignal::sendNotificationUsingTags(
-                            "(".$this->data['entry']->main_domain.") ".$scanmsgs->first()->message,
-                            array(
-                                ["field" => "tag", "key" => "report", "relation" => "=", "value" => $reportscan->scan_id],
-                            ),
-                            null, null, null, null, 
-                            "نتيجة فحص سليم لنك للرابط المرسل", 
-                        );
-                    }
                     $reportscan->status = 'moved_to_list';
                     $reportscan->save();
                 }
-
-                
             }
         }
        
