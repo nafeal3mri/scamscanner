@@ -70,11 +70,12 @@ class APImainController extends Controller
         $ln->scan_step = 1;
         $ln->save();
         //step 2
-        $proccess = ($this->getUrlData($ln))->getData(); //check database
+        
+        $proccess = ($this->getUrlData($ln,$urlcode))->getData(); //check database
             if($proccess->data->has_next){
-                $proccess = $this->checkLinkInfo($ln)->getData();;//chack page content
+                $proccess = $this->checkLinkInfo($ln,$urlcode)->getData();;//chack page content
                 if($proccess->data->has_next){
-                    $proccess = $this->scanURLWhoIs($data);//check who.is
+                    $proccess = $this->scanURLWhoIs($data,$urlcode);//check who.is
                     return $proccess;
                 }else{
                     return $proccess;
@@ -88,7 +89,7 @@ class APImainController extends Controller
             $proccess = [
                 'success' => false,
                 'data' => [
-                    'message' => __("base.We couldn't access the submited lint, it may not be working properly"),
+                    'message' => __("base.We couldn't access the submited link, it may not be working properly"),
                     'step' => 3,
                     'has_next' => false,
                     'icon' => 'not-found',
@@ -112,13 +113,13 @@ class APImainController extends Controller
            
                 switch ($requestdata->scan_step) {
                     case 1:
-                        $proccess = $this->getUrlData($requestdata); //check database
+                        $proccess = $this->getUrlData($requestdata,''); //check database
                         break;
                     case 2:
-                        $proccess = $this->checkLinkInfo($requestdata);//chack page content
+                        $proccess = $this->checkLinkInfo($requestdata,'');//chack page content
                         break;
                     case 3:
-                        $proccess = $this->scanURLWhoIs($data);//check who.is
+                        $proccess = $this->scanURLWhoIs($data,'');//check who.is
                         break;
                     default:
                         break;
@@ -168,7 +169,7 @@ class APImainController extends Controller
             // ]
         ];
     }
-    public function getUrlData($requestdata)
+    public function getUrlData($requestdata,$scantoken)
     {
         if(isset($requestdata)){
             $finalurl = $this->finalredirecturl($requestdata->scan_url,true,$requestdata->scan_token);
@@ -224,13 +225,14 @@ class APImainController extends Controller
                     $requestdata->save();
                 }
                 $dataset['step'] = 2;
+                $dataset['report_id'] = $scantoken;
 
         }
             
         return response()->json(['success' => $resp, 'data' => $dataset]);
     }
 
-    public function checkLinkInfo($requestdata)
+    public function checkLinkInfo($requestdata,$scaktoken)
     {
         $finalurl = $this->finalredirecturl($requestdata->scan_url);
         $domainres = $this->cleardomainname($finalurl);
@@ -265,7 +267,8 @@ class APImainController extends Controller
                 'share' => false,
                 'icon' => $icon_type,
                 'message' => $resp_msg, 
-                'warning_type' => $warning_type]]);
+                'warning_type' => $warning_type,
+                'report_id' => $scaktoken]]);
     }
 
     public function checkforform($requestdata)
@@ -319,7 +322,7 @@ class APImainController extends Controller
     {
         $pieces = parse_url($url);
             $publicSuffixList = Rules::createFromPath(storage_path('app/domaincache/public_suffix_list.dat'));
-            $domains = new Domain($pieces['host']);
+            $domains = new Domain($pieces['host'] ?? $url);
             $result = $publicSuffixList->resolve($domains);
             $hassubdomain = '';
             if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $pieces['host'], $regs)) {
