@@ -19,9 +19,9 @@
         "laravel/passport": "^10.2",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "opcodesio/log-viewer": "^3.0",
         "shweshi/opengraph": "^1.1",
         "symfony/translation": "^5.3.7"
-        
     },
     "require-dev": {
         "backpack/generators": "^3.1",

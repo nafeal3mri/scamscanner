@@ -33,4 +33,6 @@ Route::group([
     Route::Post('aj_scan_url', [App\Http\Controllers\Admin\AdminActions::class,'resolveRquests']);
 
     Route::crud('scan-progress-messages', 'ScanProgressMessagesCrudController');
+
+    
 }); // this should be the absolute last line of this file

@@ -28,5 +28,6 @@
         
         <hr>
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('log') }}'><i class='nav-icon la la-terminal'></i> Logs</a></li>
+        <li class='nav-item'><a class='nav-link' href='log-viewer'><i class='nav-icon la la-terminal'></i> Full Logs</a></li>
     </ul>
 </li>
