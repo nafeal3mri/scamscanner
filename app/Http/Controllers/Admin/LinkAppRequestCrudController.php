@@ -30,7 +30,7 @@ class LinkAppRequestCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\LinkAppRequest::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/link-app-request');
-        CRUD::setEntityNameStrings('link app request', 'link app requests');
+        CRUD::setEntityNameStrings('link app request', __("base.app requests"));
     }
 
     /**
@@ -46,7 +46,8 @@ class LinkAppRequestCrudController extends CrudController
             [
                 'type' => 'card',
                 'content'    => [
-                    'header' => 'Total requests', // optional
+                    'header' => __("base.Total requests"), // optional
+                    // 'label' => ,
                     'body'   => $this->crud->count(),
                 ]
              ],
@@ -61,19 +62,19 @@ class LinkAppRequestCrudController extends CrudController
         $this->crud->addColumn([
             'type'           => 'custom_html',
             'name'           => 'scan_url',
-            'label'          => 'Scan URL',
+            'label'          => __('base.Scan URL'),
             'value' => function($entry) {
                 return '<a href="'.$entry->scan_url.'" target="_blank">'.mb_strimwidth($entry->scan_url,0, 20, "...").'</a>';
             }
         ]);
-        CRUD::column('redirected_url');
+        CRUD::column('redirected_url')->label(__("base.Redirected URL"));
         // CRUD::column('scan_token');
         // CRUD::column('scan_step');
-        CRUD::column('scan_result_color');
+        CRUD::column('scan_result_color')->label(__("base.Scan color"));
         $this->crud->addColumn([
             'type'           => 'custom_html',
             'name'           => 'created_at',
-            'label'          => 'Scan time',
+            'label'          => __('base.Scan time'),
             'value' => function($entry) {
                 return  $entry->created_at;
             }

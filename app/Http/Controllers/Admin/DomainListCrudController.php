@@ -37,7 +37,7 @@ class DomainListCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\DomainList::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/domain-list');
-        CRUD::setEntityNameStrings('domain list', 'domain lists');
+        CRUD::setEntityNameStrings('domain list', __('base.Domain lists'));
     }
 
     /**
@@ -52,13 +52,13 @@ class DomainListCrudController extends CrudController
             [
                 'type' => 'card',
                 'content'    => [
-                    'header' => 'Total Domains', // optional
+                    'header' => __('base.Total Domains'), // optional
                     'body'   => $this->crud->count(), 
                 ]
              ],
         )->to('before_content');
         CRUD::column('id');
-        CRUD::column('domain_url');
+        CRUD::column('domain_url')->label(__("base.URL"));
         CRUD::column('main_domain');
         CRUD::column('type');
         // CRUD::column('category');

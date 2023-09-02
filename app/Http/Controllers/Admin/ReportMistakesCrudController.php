@@ -31,7 +31,7 @@ class ReportMistakesCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\ReportMistakes::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/report-mistakes');
-        CRUD::setEntityNameStrings('report mistakes', 'report mistakes');
+        CRUD::setEntityNameStrings('report mistakes', __('base.Reported scans'));
         $this->crud->addClause('where','status','=','new');
     }
 
@@ -47,7 +47,7 @@ class ReportMistakesCrudController extends CrudController
             [
                 'type' => 'card',
                 'content'    => [
-                    'header' => 'Total new reports', // optional
+                    'header' => __('base.Total new reports'), // optional
                     'body'   => $this->crud->count(),
                 ]
              ],
@@ -66,14 +66,14 @@ class ReportMistakesCrudController extends CrudController
         $this->crud->addColumn([
             'type'           => 'custom_html',
             'name'           => 'url_report',
-            'label'          => 'Reported url',
+            'label'          => __('base.Reported url'),
             'value' => function($entry) {
                 return '<a href="'.$entry->url_report.'" target="_blank">'.mb_strimwidth($entry->url_report,0, 20, "...").'</a>';
             }
         ]);
-        CRUD::column('scan_id');
-        CRUD::column('result');
-        CRUD::column('status');
+        CRUD::column('scan_id')->label(__("base.Scan ID"));
+        CRUD::column('result')->label(__("base.Scan Results"));
+        CRUD::column('status')->label(__("base.Status"));
         CRUD::column('created_at');
 
         /**

@@ -31,8 +31,10 @@ Route::group([
     Route::Post('update_report_status', [App\Http\Controllers\Admin\ReportMistakesCrudController::class,'updateReportStatus']);
     Route::Post('send_newsletter_notification', [App\Http\Controllers\Admin\NewslettersCrudController::class,'sendNewslettersNotification']);
     Route::Post('aj_scan_url', [App\Http\Controllers\Admin\AdminActions::class,'resolveRquests']);
+    Route::Get('change_language/{lang}', [App\Http\Controllers\Admin\SetLanguage::class,'setUserLanguage']);
 
     Route::crud('scan-progress-messages', 'ScanProgressMessagesCrudController');
 
     
+    Route::crud('user', 'UserCrudController');
 }); // this should be the absolute last line of this file

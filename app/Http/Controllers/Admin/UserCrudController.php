@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StringLookupRequest;
+use App\Http\Requests\UserRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use Backpack\CRUD\app\Library\Widget;
 
 /**
- * Class StringLookupCrudController
+ * Class UserCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class StringLookupCrudController extends CrudController
+class UserCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -27,9 +26,9 @@ class StringLookupCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\StringLookup::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/string-lookup');
-        CRUD::setEntityNameStrings('string lookup', __('base.String lookups'));
+        CRUD::setModel(\App\Models\User::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/user');
+        CRUD::setEntityNameStrings('user', 'users');
     }
 
     /**
@@ -40,21 +39,9 @@ class StringLookupCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        Widget::add(
-            [
-                'type' => 'card',
-                'content'    => [
-                    'header' => __('base.Total Strings'), // optional
-                    'body'   => $this->crud->count(),
-                ]
-             ],
-        )->to('before_content');
-
-        CRUD::column('id');
-        CRUD::column('lookup_text')->label(__("base.Lookup text"));
-        CRUD::column('lookup_type')->label(__("base.Lookup type"));
-        // CRUD::column('created_at');
-        // CRUD::column('updated_at');
+        CRUD::column('name');
+        CRUD::column('email');
+        // CRUD::column('password');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -71,23 +58,11 @@ class StringLookupCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(StringLookupRequest::class);
-        // CRUD::field('id');
-        CRUD::field('lookup_text');
-        $this->crud->addField(
-            [   
-                'name'        => 'lookup_type',
-                'label'       => __("base.Lookup Type"),
-                'type'        => 'select_from_array',
-                'options'     => ['form' => 'Form', 'body' => 'Body'],
-                'allows_null' => false,
-                'default'     => 'form',
-                'required'    => true
-            
-            ],
-        );
-        // CRUD::field('created_at');
-        // CRUD::field('updated_at');
+        CRUD::setValidation(UserRequest::class);
+
+        CRUD::field('name');
+        CRUD::field('email');
+        CRUD::field('password');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

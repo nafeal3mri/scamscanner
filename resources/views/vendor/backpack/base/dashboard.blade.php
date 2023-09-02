@@ -14,7 +14,7 @@ $daysstat = GeneralController::statistucsByDate(70);
             'body_class' => 'p-0 ',
             'class' => 'h-250',
             'content' => [
-                'title' => 'Scan count',
+                'title' => __('base.Scan count'),
                 'has_colors' => true,
                 'colors' => [
                     '#28a745',
@@ -37,7 +37,7 @@ $daysstat = GeneralController::statistucsByDate(70);
             'class' => 'h-250',
             'body_class' => 'p-0 ',
             'content' => [
-                'title' => 'Scans in 10 days',
+                'title' => __('base.Scans in 10 days'),
                 'data' => [
                     'labels' => $daysstat['date'],
                     'numbers' => $daysstat['views'],
@@ -56,10 +56,10 @@ $daysstat = GeneralController::statistucsByDate(70);
             'wrapper' => ['class' => 'col-sm-6 col-md-4 '], 
             'class'   => 'card bg-purple text-white h-250',
             'content'    => [
-                'header' => 'Scans', // optional
-                'body'   => "<span class='h2'>".$stat['total']."</span> <span class=''>Scans All time<span></span><br>
-                <span class='h2'>".$stat['today']."</span> <span class=''>today's scans<span></span><br>
-                <span class='h3'>".$stat['reports']."</span> <span class=''>Unresolved reports<span></span>
+                'header' => __('base.Scans'), // optional
+                'body'   => "<span class='h2'>".$stat['total']."</span> <span class=''>".__("base.Scans All time")."<span></span><br>
+                <span class='h2'>".$stat['today']."</span> <span class=''>".__("base.today's scans")."<span></span><br>
+                <span class='h3'>".$stat['reports']."</span> <span class=''>".__("base.Unresolved reports")."<span></span>
                 
                 ",
             ]
@@ -70,6 +70,13 @@ $daysstat = GeneralController::statistucsByDate(70);
 @endphp
 
 @section('content')
+@if($errors->any())
+<ul class="alert alert-danger">
+    @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+    @endforeach
+</ul>
+@endif
 <div class="row">
     <div class="col-md-8">
         <div class="card">

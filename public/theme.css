@@ -22,3 +22,12 @@
   .modal {
     background: rgba(0, 0, 0, 0.5);
   }
+  
+  @font-face {
+    font-family: DubaiFont;
+    src: url("fonts/Dubai.ttf");
+  }
+  body{
+    font-family: DubaiFont !important;
+  }
+  
