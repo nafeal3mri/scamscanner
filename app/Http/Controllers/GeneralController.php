@@ -57,8 +57,21 @@ class GeneralController extends Controller
             $dates[] = $value->date;
             $views[] = $value->views;
         }
+        logger(['date' => $dates,'views' => $views]);
+        // self::modify_array($dates,$views);
+        // return ['date' => $dates,'views' => $views];
         return ['date' => $dates,'views' => $views];
 
+    }
+
+    public static function modify_array($array,$range)
+    {
+        $tmp = array();
+        array_map(function($_) use (&$tmp){ $tmp[$_] = array("day"=>$_,"count"=>0); },$range);
+        $output = array_combine( array_column($array,"day"), $array ) + $tmp;
+        ksort($output);
+        logger(array_values($output));
+        return array_values($output);
     }
 
     public static function getLatestScans()

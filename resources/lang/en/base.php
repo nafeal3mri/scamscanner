@@ -38,6 +38,7 @@ return [
     "System" => "System",
     "Sitemetas" => "Sitemetas",
     "Newsletters" => "Newsletters",
+    "app requests" => "App Requests",
     "Scan progress messages" => "Scan progress messages",
     "Logs" => "Logs",
     "Full Logs" => "Full Logs",
